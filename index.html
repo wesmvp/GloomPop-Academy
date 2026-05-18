@@ -21,24 +21,15 @@
       Build your academy ID. Roll monsters, curses, pets, and profile colors.
       Climb the popularity rankings and make your student profile worth posting.
     </p>
-
-    <div class="nav">
-      <button onclick="showSection('homeSection')">Home</button>
-      <button onclick="showSection('idSection')">Student ID</button>
-      <button onclick="showSection('quizSection')">Faction Quiz</button>
-      <button onclick="showSection('rollSection')">Daily Rolls</button>
-      <button onclick="showSection('customizeSection')">Customize</button>
-      <button onclick="showSection('collectionSection')">Collection</button>
-      <button onclick="showSection('rankingSection')">Rankings</button>
-    </div>
   </header>
 
   <main>
-    <!-- HOME SCREEN -->
+    <!-- HOME / ACADEMY HUB -->
     <section id="homeSection" class="panel active">
       <div class="home-grid">
         <div class="home-main-card">
           <p class="eyebrow">Academy Hub</p>
+
           <h2>Welcome back, student.</h2>
 
           <p class="section-copy">
@@ -46,17 +37,29 @@
             Roll better items, lock your faction, customize your card, and climb popularity.
           </p>
 
-          <div class="home-actions">
+          <div class="hub-nav">
             <button class="primary" onclick="showSection('idSection')">
-              Edit Student ID
+              Student ID
+            </button>
+
+            <button onclick="showSection('quizSection')">
+              Faction Quiz
             </button>
 
             <button onclick="showSection('rollSection')">
-              Use Daily Rolls
+              Daily Rolls
             </button>
 
             <button onclick="showSection('customizeSection')">
-              Customize Profile
+              Customize
+            </button>
+
+            <button onclick="showSection('collectionSection')">
+              Collection
+            </button>
+
+            <button onclick="showSection('rankingSection')">
+              Rankings
             </button>
           </div>
 
@@ -64,18 +67,19 @@
             <h3>Updates & Events</h3>
 
             <div class="event-item">
-              <b>Coming Soon:</b>
-              Popularity Rankings will compare students by item rarity score.
+              <b>Current Build:</b>
+              Local prototype with Student ID creation, faction placement, daily rolls,
+              item collection, customization, and popularity scoring.
             </div>
 
             <div class="event-item">
-              <b>Future Event:</b>
-              Blackout Cheer Week — limited pets, colors, and curse drops.
+              <b>Next Build:</b>
+              Firebase accounts, saved profiles, server-side rankings, and public student IDs.
             </div>
 
             <div class="event-item">
-              <b>Planned:</b>
-              Firebase accounts, global chat, public profiles, and trading.
+              <b>Planned Event:</b>
+              Blackout Cheer Week — limited drops and temporary ranking bonuses.
             </div>
           </div>
         </div>
@@ -86,23 +90,27 @@
           <div class="mini-id" id="miniID">
             <div class="mini-id-top">
               <span>GLOOMPOP</span>
-              <span id="miniVerifiedTag">UNPLACED</span>
+              <span id="miniVerifiedTag">NO FACTION</span>
             </div>
 
             <div class="mini-id-body">
-              <div class="mini-avatar" id="miniAvatarIcon">☠</div>
+              <div class="mini-avatar" id="miniAvatarIcon">?</div>
 
               <div>
                 <h4 id="miniName">Unnamed Student</h4>
-                <p id="miniMonster">No Monster</p>
+
+                <p id="miniMonster">Unrolled</p>
+
                 <p>
                   <b>Faction:</b>
                   <span id="miniFaction">No Faction</span>
                 </p>
+
                 <p>
                   <b>Curse:</b>
                   <span id="miniCurse">None</span>
                 </p>
+
                 <p>
                   <b>Pet:</b>
                   <span id="miniPet">None</span>
@@ -132,9 +140,20 @@
             <h3>Popularity Preview</h3>
 
             <ol>
-              <li><span>RottenMoxie</span><b>980</b></li>
-              <li><span>StaticSaint</span><b>860</b></li>
-              <li><span id="rankingPreviewName">You</span><b id="rankingPreviewScore">0</b></li>
+              <li>
+                <span>RottenMoxie</span>
+                <b>980</b>
+              </li>
+
+              <li>
+                <span>StaticSaint</span>
+                <b>860</b>
+              </li>
+
+              <li>
+                <span id="rankingPreviewName">You</span>
+                <b id="rankingPreviewScore">0</b>
+              </li>
             </ol>
 
             <button onclick="showSection('rankingSection')">
@@ -150,17 +169,19 @@
       <h2>Student ID</h2>
 
       <p class="section-copy">
-        Your Student ID is the main profile. Name and club are chosen.
-        Monster type is rolled during setup. Faction is locked by the quiz.
+        Your Student ID is your main profile. Your name becomes permanent after setup.
+        Club and monster can be changed later from your saved options.
       </p>
 
-      <div class="grid two">
-        <!-- LEFT SIDE FORM -->
-        <div class="form-card">
+      <div class="id-page-grid">
+        <!-- SETUP FORM -->
+        <div class="form-card" id="idSetupCard">
+          <h3>Enrollment Setup</h3>
+
           <label for="studentName">Student Name</label>
           <input
             id="studentName"
-            placeholder="Example: Moxie Rot"
+            placeholder="Example: Alastor"
             maxlength="24"
           />
 
@@ -207,25 +228,57 @@
           </button>
         </div>
 
-        <!-- RIGHT SIDE ID CARD -->
+        <!-- EDIT SAVED OPTIONS -->
+        <div class="form-card hidden" id="idEditCard">
+          <h3>Profile Options</h3>
+
+          <p class="tiny">
+            Your name is locked. You can still change your club and switch between
+            your rolled monster options.
+          </p>
+
+          <label for="editMonsterType">Monster Type</label>
+          <select id="editMonsterType"></select>
+
+          <label for="editClub">Club</label>
+          <select id="editClub">
+            <option>Blackout Cheer</option>
+            <option>Bathroom Mirror Club</option>
+            <option>Locker Hex Society</option>
+            <option>Funeral Committee</option>
+            <option>Yearbook</option>
+            <option>Graveyard Fashion</option>
+            <option>NeonBruise</option>
+            <option>The Splatterhouse</option>
+          </select>
+
+          <button class="primary" onclick="saveProfileOptions()">
+            Save Changes
+          </button>
+
+          <button onclick="showIdSetupEditor()">
+            Change Club / Monster
+          </button>
+
+          <button onclick="resetPrototype()">
+            Reset Prototype Save
+          </button>
+        </div>
+
+        <!-- ID CARD -->
         <div class="student-id" id="studentID">
           <div class="id-top">
             <span>GLOOMPOP ACADEMY</span>
-            <span id="verifiedTag">UNPLACED</span>
+            <span id="verifiedTag">NO FACTION</span>
           </div>
 
           <div class="id-body">
-            <div class="avatar" id="avatarIcon">☠</div>
+            <div class="avatar" id="avatarIcon">?</div>
 
             <div class="id-info">
               <h3 id="idName">Unnamed Student</h3>
 
               <p id="idMonster">Unrolled</p>
-
-              <p>
-                <b>Faction:</b>
-                <span id="idFaction">No Faction</span>
-              </p>
 
               <p>
                 <b>Club:</b>
@@ -240,11 +293,6 @@
               <p>
                 <b>Pet:</b>
                 <span id="idPet">None</span>
-              </p>
-
-              <p>
-                <b>ID Color:</b>
-                <span id="idColorName">Default</span>
               </p>
 
               <p>
@@ -437,7 +485,7 @@
 
         <div class="event-item">
           <b>Firebase Auth:</b>
-          saves accounts and public profiles.
+          email/password and Google sign-in.
         </div>
 
         <div class="event-item">
@@ -455,7 +503,7 @@
 
   <footer>
     <p>
-      GloomPop Academy prototype v4 — academy hub, mini ID, rolls, collections, and rankings.
+      GloomPop Academy prototype v5 — academy hub, permanent ID setup, rolls, collections, and rankings.
     </p>
   </footer>
 
