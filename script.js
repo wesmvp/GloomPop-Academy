@@ -1,4 +1,4 @@
-const STORAGE_KEY = "gloompopAcademyV4";
+const STORAGE_KEY = "gloompopAcademyV5";
 
 const rarityClass = {
   Common: "common",
@@ -45,31 +45,26 @@ const factions = {
     result:
       "You got Angel Bloom. You care about presentation, image, and making even chaos look intentional. You probably say you are fine and then redesign your entire life around one bad mood."
   },
-
   "Ink Ghoul": {
     slogan: "Messy, loud, loyal, and allergic to being normal.",
     result:
       "You got Ink Ghoul. You are independent, reactive, and hard to control. You like people who feel real, not polished, and you would rather make a mess than pretend everything is cute."
   },
-
   "Lovely Hex": {
     slogan: "Cute curse. Worse personality.",
     result:
       "You got Lovely Hex. You are sweet when you want to be, but you notice everything. You remember little details, good and bad, and you know exactly how to make something feel personal."
   },
-
   "DeadHeart": {
     slogan: "Cute, emotional, dramatic, and weirdly dangerous.",
     result:
       "You got DeadHeart. You feel things hard and pretend you do not. You are romantic, intense, and probably turn normal situations into emotional lore without meaning to."
   },
-
   "Dollbite": {
     slogan: "Pretty until the jaw unhinges.",
     result:
       "You got Dollbite. You are controlled on the outside and strange underneath. People may think they have you figured out, but they are usually working with very outdated information."
   },
-
   "ChalkBorn": {
     slogan: "Haunted notebook energy.",
     result:
@@ -89,7 +84,6 @@ const quizQuestions = [
       ["Notice the pattern of what went wrong and remember it for next time.", "ChalkBorn"]
     ]
   },
-
   {
     q: "What kind of compliment actually works on you?",
     a: [
@@ -101,7 +95,6 @@ const quizQuestions = [
       ["That you are smarter than people expected.", "ChalkBorn"]
     ]
   },
-
   {
     q: "Pick the most annoying type of person.",
     a: [
@@ -113,7 +106,6 @@ const quizQuestions = [
       ["Someone who never thinks before talking.", "ChalkBorn"]
     ]
   },
-
   {
     q: "If your profile went viral, what would it probably be for?",
     a: [
@@ -125,7 +117,6 @@ const quizQuestions = [
       ["A joke or observation that is way too accurate.", "ChalkBorn"]
     ]
   },
-
   {
     q: "What do you usually do when someone hurts your feelings?",
     a: [
@@ -137,7 +128,6 @@ const quizQuestions = [
       ["Analyze why it bothered you before reacting.", "ChalkBorn"]
     ]
   },
-
   {
     q: "Pick the best kind of friend.",
     a: [
@@ -149,7 +139,6 @@ const quizQuestions = [
       ["Someone smart who can talk about random stuff for hours.", "ChalkBorn"]
     ]
   },
-
   {
     q: "What is your worst habit?",
     a: [
@@ -161,7 +150,6 @@ const quizQuestions = [
       ["Thinking so much that you miss the simple answer.", "ChalkBorn"]
     ]
   },
-
   {
     q: "What kind of room would you feel most comfortable in?",
     a: [
@@ -176,24 +164,11 @@ const quizQuestions = [
 ];
 
 function item(category, name, rarity, desc) {
-  return {
-    id: `${category}:${name}`,
-    category,
-    name,
-    rarity,
-    desc
-  };
+  return { id: `${category}:${name}`, category, name, rarity, desc };
 }
 
 function colorItem(name, rarity, hex, desc) {
-  return {
-    id: `color:${name}`,
-    category: "color",
-    name,
-    rarity,
-    hex,
-    desc
-  };
+  return { id: `color:${name}`, category: "color", name, rarity, hex, desc };
 }
 
 const curses = [
@@ -314,6 +289,7 @@ let quizIndex = 0;
 let quizScore = {};
 let currentCustomizeCategory = "curse";
 let currentCollectionCategory = "curse";
+let setupEditorForcedOpen = false;
 
 let selected = {
   curse: state.equipped.curse,
@@ -325,25 +301,23 @@ function defaultState() {
   return {
     profile: {
       name: "",
+      nameLocked: false,
       monsterType: "Unrolled",
       monsterChoices: [],
       monsterRollsUsed: false,
       club: "Blackout Cheer",
       faction: null
     },
-
     inventory: {
       curse: [],
       pet: [],
       color: []
     },
-
     equipped: {
       curse: null,
       pet: null,
       color: null
     },
-
     rolls: {
       remaining: 3,
       lastRefresh: Date.now()
@@ -353,10 +327,7 @@ function defaultState() {
 
 function loadState() {
   const raw = localStorage.getItem(STORAGE_KEY);
-
-  if (!raw) {
-    return defaultState();
-  }
+  if (!raw) return defaultState();
 
   try {
     const saved = JSON.parse(raw);
@@ -365,22 +336,10 @@ function loadState() {
     return {
       ...fresh,
       ...saved,
-      profile: {
-        ...fresh.profile,
-        ...saved.profile
-      },
-      inventory: {
-        ...fresh.inventory,
-        ...saved.inventory
-      },
-      equipped: {
-        ...fresh.equipped,
-        ...saved.equipped
-      },
-      rolls: {
-        ...fresh.rolls,
-        ...saved.rolls
-      }
+      profile: { ...fresh.profile, ...saved.profile },
+      inventory: { ...fresh.inventory, ...saved.inventory },
+      equipped: { ...fresh.equipped, ...saved.equipped },
+      rolls: { ...fresh.rolls, ...saved.rolls }
     };
   } catch {
     return defaultState();
@@ -397,42 +356,65 @@ function showSection(id) {
   });
 
   document.getElementById(id).classList.add("active");
-
   renderAll();
 }
 
 function saveProfile() {
-  state.profile.name = document.getElementById("studentName").value.trim();
+  const nameInput = document.getElementById("studentName").value.trim();
+
+  if (!state.profile.nameLocked) {
+    if (!nameInput) {
+      alert("Enter a student name first.");
+      return;
+    }
+
+    if (!state.profile.monsterRollsUsed || state.profile.monsterType === "Unrolled") {
+      alert("Roll and choose a monster type first.");
+      return;
+    }
+
+    state.profile.name = nameInput;
+    state.profile.nameLocked = true;
+  }
+
   state.profile.club = document.getElementById("club").value;
+  state.profile.monsterType = document.getElementById("monsterType").value || state.profile.monsterType;
 
-  const monsterSelect = document.getElementById("monsterType");
-  state.profile.monsterType = monsterSelect.value || "Unrolled";
-
+  setupEditorForcedOpen = false;
   saveState();
   renderAll();
 }
 
+function saveProfileOptions() {
+  const editMonster = document.getElementById("editMonsterType").value;
+  const editClub = document.getElementById("editClub").value;
+
+  if (editMonster) state.profile.monsterType = editMonster;
+  if (editClub) state.profile.club = editClub;
+
+  setupEditorForcedOpen = false;
+  saveState();
+  renderAll();
+}
+
+function showIdSetupEditor() {
+  setupEditorForcedOpen = true;
+  renderIdEditorVisibility();
+}
+
 function resetPrototype() {
   const yes = confirm("Reset all local prototype data?");
-
-  if (!yes) {
-    return;
-  }
+  if (!yes) return;
 
   localStorage.removeItem(STORAGE_KEY);
 
   state = defaultState();
-
-  selected = {
-    curse: null,
-    pet: null,
-    color: null
-  };
-
+  selected = { curse: null, pet: null, color: null };
   quizIndex = 0;
   quizScore = {};
   currentCustomizeCategory = "curse";
   currentCollectionCategory = "curse";
+  setupEditorForcedOpen = false;
 
   startQuiz();
   renderAll();
@@ -456,9 +438,7 @@ function rollMonsterOptions() {
 }
 
 function chooseMonster(monster) {
-  if (!state.profile.monsterChoices.includes(monster)) {
-    return;
-  }
+  if (!state.profile.monsterChoices.includes(monster)) return;
 
   state.profile.monsterType = monster;
   saveState();
@@ -485,6 +465,7 @@ function renderMonsterSetup() {
   });
 
   select.value = state.profile.monsterType || choices[0];
+  select.onchange = () => chooseMonster(select.value);
 
   choicesBox.innerHTML = "";
 
@@ -498,17 +479,52 @@ function renderMonsterSetup() {
   state.profile.monsterChoices.forEach((monster) => {
     const btn = document.createElement("button");
     btn.className =
-      "monster-choice" +
-      (state.profile.monsterType === monster ? " selected" : "");
-
+      "monster-choice" + (state.profile.monsterType === monster ? " selected" : "");
     btn.textContent = monster;
-
-    btn.onclick = () => {
-      chooseMonster(monster);
-    };
-
+    btn.onclick = () => chooseMonster(monster);
     choicesBox.appendChild(btn);
   });
+}
+
+function renderEditOptions() {
+  const editMonster = document.getElementById("editMonsterType");
+  const editClub = document.getElementById("editClub");
+
+  editMonster.innerHTML = "";
+
+  const choices =
+    state.profile.monsterChoices.length > 0
+      ? state.profile.monsterChoices
+      : [state.profile.monsterType || "Unrolled"];
+
+  choices.forEach((monster) => {
+    const option = document.createElement("option");
+    option.value = monster;
+    option.textContent = monster;
+    editMonster.appendChild(option);
+  });
+
+  editMonster.value = state.profile.monsterType;
+  editClub.value = state.profile.club;
+}
+
+function renderIdEditorVisibility() {
+  const setupCard = document.getElementById("idSetupCard");
+  const editCard = document.getElementById("idEditCard");
+
+  if (!state.profile.nameLocked) {
+    setupCard.classList.remove("hidden");
+    editCard.classList.add("hidden");
+    return;
+  }
+
+  if (setupEditorForcedOpen) {
+    setupCard.classList.add("hidden");
+    editCard.classList.remove("hidden");
+  } else {
+    setupCard.classList.add("hidden");
+    editCard.classList.remove("hidden");
+  }
 }
 
 function renderID() {
@@ -516,12 +532,14 @@ function renderID() {
   document.getElementById("club").value = state.profile.club;
 
   renderMonsterSetup();
+  renderEditOptions();
+  renderIdEditorVisibility();
 
   const equippedCurse = findItem(state.equipped.curse);
   const equippedPet = findItem(state.equipped.pet);
   const equippedColor = findItem(state.equipped.color);
 
-  const accent = equippedColor?.hex || "#ff4fd8";
+  const accent = equippedColor?.hex || "#9b9b9b";
   document.documentElement.style.setProperty("--id-accent", accent);
 
   const name = state.profile.name || "Unnamed Student";
@@ -530,20 +548,17 @@ function renderID() {
   const club = state.profile.club;
   const curse = equippedCurse ? equippedCurse.name : "None";
   const pet = equippedPet ? equippedPet.name : "None";
-  const colorName = equippedColor ? equippedColor.name : "Default";
   const popularity = calculatePopularityScore();
 
   document.getElementById("idName").textContent = name;
   document.getElementById("idMonster").textContent = monster;
-  document.getElementById("idFaction").textContent = faction;
   document.getElementById("idClub").textContent = club;
   document.getElementById("idCurse").textContent = curse;
   document.getElementById("idPet").textContent = pet;
-  document.getElementById("idColorName").textContent = colorName;
   document.getElementById("idPopularityScore").textContent = popularity;
 
-  document.getElementById("verifiedTag").textContent =
-    state.profile.faction ? "PLACED" : "UNPLACED";
+  document.getElementById("verifiedTag").textContent = faction;
+  document.getElementById("miniVerifiedTag").textContent = faction;
 
   const factionData = factions[state.profile.faction];
 
@@ -553,20 +568,11 @@ function renderID() {
 
   setRarityText("idCurse", equippedCurse?.rarity);
   setRarityText("idPet", equippedPet?.rarity);
-  setRarityText("idColorName", equippedColor?.rarity);
 
   const avatar = getMonsterAvatar(monster);
   document.getElementById("avatarIcon").textContent = avatar;
 
-  renderMiniID({
-    name,
-    monster,
-    faction,
-    curse,
-    pet,
-    avatar,
-    popularity
-  });
+  renderMiniID({ name, monster, faction, curse, pet, avatar, popularity });
 }
 
 function renderMiniID(data) {
@@ -576,9 +582,6 @@ function renderMiniID(data) {
   document.getElementById("miniCurse").textContent = data.curse;
   document.getElementById("miniPet").textContent = data.pet;
   document.getElementById("miniAvatarIcon").textContent = data.avatar;
-
-  document.getElementById("miniVerifiedTag").textContent =
-    state.profile.faction ? "PLACED" : "UNPLACED";
 
   document.getElementById("homePopularityScore").textContent = data.popularity;
   document.getElementById("rankingPreviewScore").textContent = data.popularity;
@@ -603,7 +606,7 @@ function getMonsterAvatar(monster) {
     Unrolled: "?"
   };
 
-  return avatarMap[monster] || "☠";
+  return avatarMap[monster] || "?";
 }
 
 function setRarityText(elementId, rarity) {
@@ -613,9 +616,7 @@ function setRarityText(elementId, rarity) {
     el.classList.remove(cls);
   });
 
-  if (rarity) {
-    el.classList.add(rarityTextClass[rarity]);
-  }
+  if (rarity) el.classList.add(rarityTextClass[rarity]);
 }
 
 function startQuiz() {
@@ -626,14 +627,12 @@ function startQuiz() {
 
   quizIndex = 0;
   quizScore = {};
-
   renderQuizQuestion();
 }
 
 function renderQuizLocked() {
   const locked = document.getElementById("quizLocked");
   const box = document.getElementById("quizBox");
-
   const faction = state.profile.faction;
 
   locked.classList.remove("hidden");
@@ -660,7 +659,6 @@ function renderQuizQuestion() {
       "ChalkBorn";
 
     state.profile.faction = winner;
-
     saveState();
 
     box.innerHTML = `
@@ -673,7 +671,6 @@ function renderQuizQuestion() {
     `;
 
     renderID();
-
     return;
   }
 
@@ -683,7 +680,6 @@ function renderQuizQuestion() {
 
   shuffledAnswers.forEach(([text, faction]) => {
     const btn = document.createElement("button");
-
     btn.className = "quiz-answer";
     btn.textContent = text;
 
@@ -721,27 +717,22 @@ function rollItem() {
   state.rolls.remaining--;
 
   const rolled = weightedRoll();
-
   const owned = state.inventory[rolled.category].includes(rolled.id);
 
-  if (!owned) {
-    state.inventory[rolled.category].push(rolled.id);
-  }
+  if (!owned) state.inventory[rolled.category].push(rolled.id);
 
   saveState();
-
   renderRollCard(rolled, false, owned);
   renderAll();
 }
 
 function animateRollButton() {
   const btn = document.getElementById("rollButton");
-
-  if (!btn) {
-    return;
-  }
+  if (!btn) return;
 
   btn.classList.remove("roll-pop");
+  btn.classList.remove("primary");
+  btn.blur();
 
   void btn.offsetWidth;
 
@@ -750,7 +741,7 @@ function animateRollButton() {
   setTimeout(() => {
     btn.classList.remove("roll-pop");
     btn.blur();
-  }, 260);
+  }, 280);
 }
 
 function weightedRoll() {
@@ -768,9 +759,7 @@ function weightedRoll() {
 
     const weight = weights[item.rarity] || 1;
 
-    for (let i = 0; i < weight; i++) {
-      pool.push(item);
-    }
+    for (let i = 0; i < weight; i++) pool.push(item);
   });
 
   return randomFrom(pool);
@@ -785,17 +774,13 @@ function renderRollCard(rolled, noRolls = false, duplicate = false) {
   if (noRolls) {
     rarityEl.textContent = "LOCKED";
     rarityEl.className = "rarity forbidden";
-
     nameEl.textContent = "No rolls left";
     categoryEl.textContent = "Come back after the refresh.";
     descEl.textContent = nextRefreshText();
-
     return;
   }
 
-  if (!rolled) {
-    return;
-  }
+  if (!rolled) return;
 
   rarityEl.textContent = duplicate ? "DUPLICATE" : rolled.rarity;
   rarityEl.className = duplicate
@@ -804,7 +789,6 @@ function renderRollCard(rolled, noRolls = false, duplicate = false) {
 
   nameEl.textContent = rolled.name;
   categoryEl.textContent = `Category: ${labelCategory(rolled.category)}`;
-
   descEl.textContent = duplicate
     ? "Duplicate. You got nothing, and yes, the roll is still gone."
     : rolled.desc;
@@ -813,24 +797,16 @@ function renderRollCard(rolled, noRolls = false, duplicate = false) {
 function renderRolls() {
   refreshRollsIfNeeded();
 
-  document.getElementById("rollsLeft").textContent =
-    state.rolls.remaining;
-
-  document.getElementById("homeRollsLeft").textContent =
-    state.rolls.remaining;
-
-  document.getElementById("rollResetText").textContent =
-    nextRefreshText();
+  document.getElementById("rollsLeft").textContent = state.rolls.remaining;
+  document.getElementById("homeRollsLeft").textContent = state.rolls.remaining;
+  document.getElementById("rollResetText").textContent = nextRefreshText();
 }
 
 function nextRefreshText() {
   const day = 24 * 60 * 60 * 1000;
   const msLeft = Math.max(0, day - (Date.now() - state.rolls.lastRefresh));
-
   const hours = Math.floor(msLeft / (60 * 60 * 1000));
-  const minutes = Math.floor(
-    (msLeft % (60 * 60 * 1000)) / (60 * 1000)
-  );
+  const minutes = Math.floor((msLeft % (60 * 60 * 1000)) / (60 * 1000));
 
   return `Rolls refresh in ${hours}h ${minutes}m.`;
 }
@@ -843,7 +819,6 @@ function showCustomizeCategory(category) {
   });
 
   const buttons = document.querySelectorAll(".tab-button");
-
   if (category === "curse") buttons[0].classList.add("active");
   if (category === "pet") buttons[1].classList.add("active");
   if (category === "color") buttons[2].classList.add("active");
@@ -852,13 +827,8 @@ function showCustomizeCategory(category) {
 }
 
 function renderCustomize() {
-  selected.curse = state.equipped.curse;
-  selected.pet = state.equipped.pet;
-  selected.color = state.equipped.color;
-
   const title = document.getElementById("customizeCurrentTitle");
   title.textContent = labelCategoryPlural(currentCustomizeCategory);
-
   renderCustomCategory("customizeGrid", currentCustomizeCategory);
 }
 
@@ -873,31 +843,24 @@ function renderCustomCategory(elementId, category) {
     return;
   }
 
-  ids
-    .map(findItem)
-    .filter(Boolean)
-    .forEach((item) => {
-      const box = document.createElement("div");
+  ids.map(findItem).filter(Boolean).forEach((item) => {
+    const box = document.createElement("div");
 
-      box.className = `item-box ${
-        selected[category] === item.id ? "selected" : ""
-      }`;
+    box.className = `item-box ${selected[category] === item.id ? "selected" : ""}`;
 
-      box.onclick = () => {
-        selected[category] =
-          selected[category] === item.id ? null : item.id;
+    box.onclick = () => {
+      selected[category] = selected[category] === item.id ? null : item.id;
+      renderCustomCategory(elementId, category);
+    };
 
-        renderCustomCategory(elementId, category);
-      };
+    box.innerHTML = `
+      <span class="rarity ${rarityClass[item.rarity]}">${item.rarity}</span>
+      <span class="item-name">${item.name}</span>
+      <p class="tiny">${item.desc}</p>
+    `;
 
-      box.innerHTML = `
-        <span class="rarity ${rarityClass[item.rarity]}">${item.rarity}</span>
-        <span class="item-name">${item.name}</span>
-        <p class="tiny">${item.desc}</p>
-      `;
-
-      el.appendChild(box);
-    });
+    el.appendChild(box);
+  });
 }
 
 function applyCustomization() {
@@ -906,23 +869,13 @@ function applyCustomization() {
   state.equipped.color = selected.color;
 
   saveState();
-
   renderAll();
   showSection("idSection");
 }
 
 function clearEquipped() {
-  selected = {
-    curse: null,
-    pet: null,
-    color: null
-  };
-
-  state.equipped = {
-    curse: null,
-    pet: null,
-    color: null
-  };
+  selected = { curse: null, pet: null, color: null };
+  state.equipped = { curse: null, pet: null, color: null };
 
   saveState();
   renderAll();
@@ -936,7 +889,6 @@ function showCollectionCategory(category) {
   });
 
   const buttons = document.querySelectorAll(".collection-tab-button");
-
   if (category === "curse") buttons[0].classList.add("active");
   if (category === "pet") buttons[1].classList.add("active");
   if (category === "color") buttons[2].classList.add("active");
@@ -950,14 +902,9 @@ function renderCollection() {
 
   renderCollectionCategory("collectionGrid", currentCollectionCategory);
 
-  document.getElementById("curseCount").textContent =
-    state.inventory.curse.length;
-
-  document.getElementById("petCount").textContent =
-    state.inventory.pet.length;
-
-  document.getElementById("colorCount").textContent =
-    state.inventory.color.length;
+  document.getElementById("curseCount").textContent = state.inventory.curse.length;
+  document.getElementById("petCount").textContent = state.inventory.pet.length;
+  document.getElementById("colorCount").textContent = state.inventory.color.length;
 
   const totalItems =
     state.inventory.curse.length +
@@ -978,22 +925,18 @@ function renderCollectionCategory(elementId, category) {
     return;
   }
 
-  ids
-    .map(findItem)
-    .filter(Boolean)
-    .forEach((item) => {
-      const box = document.createElement("div");
+  ids.map(findItem).filter(Boolean).forEach((item) => {
+    const box = document.createElement("div");
+    box.className = "gallery-item";
 
-      box.className = "gallery-item";
+    box.innerHTML = `
+      <span class="rarity ${rarityClass[item.rarity]}">${item.rarity}</span>
+      <h3>${item.name}</h3>
+      <p>${item.desc}</p>
+    `;
 
-      box.innerHTML = `
-        <span class="rarity ${rarityClass[item.rarity]}">${item.rarity}</span>
-        <h3>${item.name}</h3>
-        <p>${item.desc}</p>
-      `;
-
-      el.appendChild(box);
-    });
+    el.appendChild(box);
+  });
 }
 
 function calculatePopularityScore() {
@@ -1002,10 +945,7 @@ function calculatePopularityScore() {
   ["curse", "pet", "color"].forEach((category) => {
     state.inventory[category].forEach((id) => {
       const ownedItem = findItem(id);
-
-      if (ownedItem) {
-        score += rarityScore[ownedItem.rarity] || 0;
-      }
+      if (ownedItem) score += rarityScore[ownedItem.rarity] || 0;
     });
   });
 
@@ -1025,31 +965,24 @@ function calculatePopularityScore() {
 }
 
 function findItem(id) {
-  if (!id) {
-    return null;
-  }
-
+  if (!id) return null;
   return allItems.find((item) => item.id === id) || null;
 }
 
 function labelCategory(category) {
-  const labels = {
+  return {
     curse: "Curse",
     pet: "Pet",
     color: "ID Color"
-  };
-
-  return labels[category] || category;
+  }[category] || category;
 }
 
 function labelCategoryPlural(category) {
-  const labels = {
+  return {
     curse: "Curses",
     pet: "Pets",
     color: "ID Colors"
-  };
-
-  return labels[category] || category;
+  }[category] || category;
 }
 
 function randomFrom(arr) {
@@ -1066,10 +999,7 @@ function renderAll() {
     renderQuizLocked();
   } else {
     const quizBox = document.getElementById("quizBox");
-
-    if (!quizBox.innerHTML.trim()) {
-      startQuiz();
-    }
+    if (!quizBox.innerHTML.trim()) startQuiz();
   }
 }
 
