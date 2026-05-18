@@ -3,153 +3,257 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>GloomPop Academy</title>
+
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <div class="noise"></div>
 
   <header class="hero">
-    <p class="eyebrow">Welcome to detention</p>
+    <p class="eyebrow">Enrollment is permanent</p>
+
     <h1>GloomPop Academy</h1>
+
     <p class="tagline">
-      A cute-creepy academy for cursed students, glitter goblins, ink brats, dollhouse disasters, and emotionally unstable mascots.
+      Take your faction placement once. Roll academy items every 24 hours.
+      Build a student ID worth posting.
     </p>
 
     <div class="nav">
-      <button onclick="showSection('idMaker')">Make Student ID</button>
-      <button onclick="showSection('quiz')">Faction Quiz</button>
-      <button onclick="showSection('fortune')">Daily Curse</button>
-      <button onclick="showSection('cards')">Draw Card</button>
+      <button onclick="showSection('idSection')">Student ID</button>
+      <button onclick="showSection('quizSection')">Faction Quiz</button>
+      <button onclick="showSection('rollSection')">Daily Rolls</button>
+      <button onclick="showSection('customizeSection')">Customize ID</button>
+      <button onclick="showSection('collectionSection')">Collection</button>
     </div>
   </header>
 
   <main>
-    <!-- 1. CURSED STUDENT ID GENERATOR -->
-    <section id="idMaker" class="panel active">
-      <h2>Cursed Student ID Generator</h2>
-      <p class="section-copy">Build your fake academy ID. Screenshot it, save it, or use it as an OC starter.</p>
+    <!-- STUDENT ID PAGE -->
+    <section id="idSection" class="panel active">
+      <h2>Student ID</h2>
+
+      <p class="section-copy">
+        Your faction is locked by the quiz. Your curse, pet, and ID color come from rolls.
+      </p>
 
       <div class="grid two">
+        <!-- LEFT SIDE FORM -->
         <div class="form-card">
-          <label>Student Name</label>
-          <input id="studentName" placeholder="Example: Moxie Rot" maxlength="24" />
+          <label for="studentName">Student Name</label>
+          <input
+            id="studentName"
+            placeholder="Example: Moxie Rot"
+            maxlength="24"
+          />
 
-          <label>Monster Type</label>
+          <label for="monsterType">Monster Type</label>
           <select id="monsterType">
-            <option>Bubblegum Ghoul</option>
-            <option>Ink Brat</option>
-            <option>Rotten Angel</option>
-            <option>Chalk Demon</option>
-            <option>Static Bunny</option>
+            <option>DeadHeart</option>
+            <option>Graffiti Ghoul</option>
+            <option>LovelyAngel</option>
             <option>Velvet Bat</option>
-            <option>Dollhouse Witch</option>
-            <option>Skullpop Idol</option>
+            <option>ChalkBorn</option>
+            <option>Mascot Mutant</option>
+            <option>Plush Rot</option>
+            <option>Skull Idol</option>
+            <option>Moth Kid</option>
           </select>
 
-          <label>Faction</label>
-          <select id="idFaction">
-            <option>Rotten Hearts</option>
-            <option>Ink Rats</option>
-            <option>Velvet Bats</option>
-            <option>Static Angels</option>
-            <option>Chalk Demons</option>
-            <option>Dollhouse Riot</option>
-          </select>
-
-          <label>Club</label>
+          <label for="club">Club</label>
           <select id="club">
-            <option>Detention Choir</option>
-            <option>Graveyard Fashion Club</option>
-            <option>Possessed Mascot Team</option>
-            <option>Drama Coven</option>
-            <option>Ink Skater Crew</option>
-            <option>Cursed Yearbook Staff</option>
+            <option>Blackout Cheer</option>
+            <option>Bathroom Mirror Club</option>
+            <option>Locker Hex Society</option>
+            <option>Funeral Committee</option>
+            <option>Yearbook</option>
+            <option>Graveyard Fashion</option>
+            <option>NeonBruise</option>
+            <option>The Splatterhouse</option>
           </select>
 
-          <label>Favorite Curse</label>
-          <select id="curse">
-            <option>Glitter Rot</option>
-            <option>Mirror Bite</option>
-            <option>Homework Haunting</option>
-            <option>Acid Tears</option>
-            <option>Static Halo</option>
-            <option>Chalk Fever</option>
-          </select>
+          <button class="primary" onclick="saveProfile()">
+            Save Student Info
+          </button>
 
-          <button class="primary" onclick="makeID()">Generate ID</button>
+          <button onclick="resetPrototype()">
+            Reset Prototype Save
+          </button>
         </div>
 
+        <!-- RIGHT SIDE ID CARD -->
         <div class="student-id" id="studentID">
           <div class="id-top">
             <span>GLOOMPOP ACADEMY</span>
-            <span>STUDENT ID</span>
+            <span id="verifiedTag">UNPLACED</span>
           </div>
+
           <div class="id-body">
-            <div class="avatar">☠</div>
-            <div>
-              <h3 id="cardName">Moxie Rot</h3>
-              <p id="cardType">Bubblegum Ghoul</p>
-              <p><b>Faction:</b> <span id="cardFaction">Rotten Hearts</span></p>
-              <p><b>Club:</b> <span id="cardClub">Detention Choir</span></p>
-              <p><b>Curse:</b> <span id="cardCurse">Glitter Rot</span></p>
-              <p class="quote" id="cardQuote">“I’m not dramatic. I’m foreshadowing.”</p>
+            <div class="avatar" id="avatarIcon">☠</div>
+
+            <div class="id-info">
+              <h3 id="idName">Unnamed Student</h3>
+
+              <p id="idMonster">DeadHeart</p>
+
+              <p>
+                <b>Faction:</b>
+                <span id="idFaction">No Faction</span>
+              </p>
+
+              <p>
+                <b>Club:</b>
+                <span id="idClub">Blackout Cheer</span>
+              </p>
+
+              <p>
+                <b>Curse:</b>
+                <span id="idCurse">None</span>
+              </p>
+
+              <p>
+                <b>Pet:</b>
+                <span id="idPet">None</span>
+              </p>
+
+              <p>
+                <b>ID Color:</b>
+                <span id="idColorName">Default</span>
+              </p>
+
+              <p class="quote" id="idQuote">
+                “I haven’t been placed yet.”
+              </p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 2. FACTION QUIZ WEBSITE -->
-    <section id="quiz" class="panel">
+    <!-- FACTION QUIZ PAGE -->
+    <section id="quizSection" class="panel">
       <h2>Faction Quiz</h2>
-      <p class="section-copy">Answer fast. The academy already knows too much.</p>
+
+      <p class="section-copy">
+        One try. The academy does not believe in retakes.
+      </p>
+
+      <div id="quizLocked" class="locked hidden"></div>
 
       <div id="quizBox" class="quiz-box"></div>
-      <button class="primary" onclick="startQuiz()">Restart Quiz</button>
     </section>
 
-    <!-- 4. DAILY CURSED FORTUNE -->
-    <section id="fortune" class="panel">
-      <h2>Daily Cursed Fortune</h2>
-      <p class="section-copy">One curse per day. Do not argue with the lockers.</p>
+    <!-- DAILY ROLLS PAGE -->
+    <section id="rollSection" class="panel">
+      <h2>Daily Rolls</h2>
 
-      <div class="fortune-card" id="fortuneCard">
-        <h3>Today's Curse</h3>
-        <p id="fortuneText"></p>
-      </div>
-
-      <button class="primary" onclick="makeFortune()">Reroll Curse</button>
-    </section>
-
-    <!-- 5. COLLECTIBLE CHARACTER CARD SITE -->
-    <section id="cards" class="panel">
-      <h2>Collectible Character Cards</h2>
-      <p class="section-copy">Draw a student from the cursed yearbook.</p>
+      <p class="section-copy">
+        You get 3 rolls every 24 hours. Rolls can give curses, pets, or ID colors.
+        Duplicates give nothing and still use a roll.
+      </p>
 
       <div class="grid two">
         <div class="draw-area">
-          <button class="big-draw" onclick="drawCard()">Draw Student Card</button>
-          <p class="tiny">Cards save to your browser gallery.</p>
-          <button onclick="clearGallery()">Clear Gallery</button>
+          <div class="roll-count">
+            <span id="rollsLeft">3</span>
+            <small>rolls left</small>
+          </div>
+
+          <button class="big-draw" onclick="rollItem()">
+            Roll Academy Item
+          </button>
+
+          <p class="tiny" id="rollResetText">
+            Rolls refresh every 24 hours.
+          </p>
         </div>
 
-        <div class="character-card" id="characterCard">
-          <span class="rarity" id="cardRarity">Rare</span>
-          <h3 id="charName">Bubblegum Ghoul</h3>
-          <p id="charDesc">A detention legend who cries acid glitter and smiles during fire drills.</p>
-          <p><b>Power:</b> <span id="charPower">Turns embarrassment into poison.</span></p>
-          <p><b>Weakness:</b> <span id="charWeakness">Sincere compliments.</span></p>
+        <div class="roll-card" id="rollCard">
+          <span class="rarity common" id="rollRarity">Common</span>
+
+          <h3 id="rollName">No roll yet</h3>
+
+          <p id="rollCategory">Category: —</p>
+
+          <p id="rollDesc">
+            The locker is waiting.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CUSTOMIZE ID PAGE -->
+    <section id="customizeSection" class="panel">
+      <h2>Customize ID</h2>
+
+      <p class="section-copy">
+        Pick one curse, one pet, and one ID color. Selected items glow and get a checkmark.
+      </p>
+
+      <div class="customize-actions">
+        <button class="primary" onclick="applyCustomization()">
+          Apply Selected Items to ID
+        </button>
+
+        <button onclick="clearEquipped()">
+          Clear Equipped Items
+        </button>
+      </div>
+
+      <h3>Curses</h3>
+      <div id="customCurses" class="item-grid"></div>
+
+      <h3>Pets</h3>
+      <div id="customPets" class="item-grid"></div>
+
+      <h3>ID Colors</h3>
+      <div id="customColors" class="item-grid"></div>
+    </section>
+
+    <!-- COLLECTION PAGE -->
+    <section id="collectionSection" class="panel">
+      <h2>Collection</h2>
+
+      <p class="section-copy">
+        Everything you own. Later this can become a public profile, leaderboard,
+        global chat, and trading system.
+      </p>
+
+      <div class="collection-stats">
+        <div>
+          <b id="curseCount">0</b>
+          <span>Curses</span>
+        </div>
+
+        <div>
+          <b id="petCount">0</b>
+          <span>Pets</span>
+        </div>
+
+        <div>
+          <b id="colorCount">0</b>
+          <span>Colors</span>
         </div>
       </div>
 
-      <h3>Your Gallery</h3>
-      <div id="gallery" class="gallery"></div>
+      <h3>Curses</h3>
+      <div id="collectionCurses" class="gallery"></div>
+
+      <h3>Pets</h3>
+      <div id="collectionPets" class="gallery"></div>
+
+      <h3>ID Colors</h3>
+      <div id="collectionColors" class="gallery"></div>
     </section>
   </main>
 
   <footer>
-    <p>GloomPop Academy prototype. Built for weird loyal fans, cursed OCs, and screenshot sharing.</p>
+    <p>
+      GloomPop Academy prototype v3 — localStorage now, Firebase later.
+    </p>
   </footer>
 
   <script src="script.js"></script>
