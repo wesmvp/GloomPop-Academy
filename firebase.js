@@ -69,9 +69,7 @@ window.gloomFirebase = {
   },
 
   async savePlayerState(state, popularityScore) {
-    if (!currentUser) {
-      throw new Error("Not signed in.");
-    }
+    if (!currentUser) return;
 
     const playerRef = doc(db, "players", currentUser.uid);
 
@@ -94,16 +92,12 @@ window.gloomFirebase = {
   },
 
   async loadPlayerState() {
-    if (!currentUser) {
-      return null;
-    }
+    if (!currentUser) return null;
 
     const playerRef = doc(db, "players", currentUser.uid);
     const snap = await getDoc(playerRef);
 
-    if (!snap.exists()) {
-      return null;
-    }
+    if (!snap.exists()) return null;
 
     return snap.data();
   },
