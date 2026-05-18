@@ -1,4 +1,4 @@
-const STORAGE_KEY = "gloompopAcademyV3";
+const STORAGE_KEY = "gloompopAcademyV4";
 
 const rarityClass = {
   Common: "common",
@@ -18,138 +18,159 @@ const rarityTextClass = {
   Forbidden: "forbiddenText"
 };
 
+const rarityScore = {
+  Common: 5,
+  Uncommon: 15,
+  Rare: 40,
+  Epic: 100,
+  Legendary: 250,
+  Forbidden: 700
+};
+
+const monsterTypes = [
+  "DeadHeart",
+  "Graffiti Ghoul",
+  "LovelyAngel",
+  "Velvet Bat",
+  "ChalkBorn",
+  "Mascot Mutant",
+  "Plush Rot",
+  "Skull Idol",
+  "Moth Kid"
+];
+
 const factions = {
   "Angel Bloom": {
     slogan: "Half halo, half bad decision.",
     result:
-      "You got Angel Bloom because you need everything to look pretty even when it is actively falling apart. You are the type to say you are fine, then make it everyone’s aesthetic problem."
+      "You got Angel Bloom. You care about presentation, image, and making even chaos look intentional. You probably say you are fine and then redesign your entire life around one bad mood."
   },
 
   "Ink Ghoul": {
     slogan: "Messy, loud, loyal, and allergic to being normal.",
     result:
-      "You got Ink Ghoul because you treat rules like rough drafts. You are probably fun, probably a problem, and definitely the reason the bathroom wall has a nickname now."
+      "You got Ink Ghoul. You are independent, reactive, and hard to control. You like people who feel real, not polished, and you would rather make a mess than pretend everything is cute."
   },
 
   "Lovely Hex": {
     slogan: "Cute curse. Worse personality.",
     result:
-      "You got Lovely Hex because you weaponize sweetness. You say 'aww' like a threat and somehow make revenge look handmade."
+      "You got Lovely Hex. You are sweet when you want to be, but you notice everything. You remember little details, good and bad, and you know exactly how to make something feel personal."
   },
 
   "DeadHeart": {
     slogan: "Cute, emotional, dramatic, and weirdly dangerous.",
     result:
-      "You got DeadHeart because you can turn a normal Tuesday into a tragic romance arc and somehow make everyone else apologize."
+      "You got DeadHeart. You feel things hard and pretend you do not. You are romantic, intense, and probably turn normal situations into emotional lore without meaning to."
   },
 
   "Dollbite": {
     slogan: "Pretty until the jaw unhinges.",
     result:
-      "You got Dollbite because you look harmless in the exact way haunted dolls look harmless. Everyone should have read the warning label."
+      "You got Dollbite. You are controlled on the outside and strange underneath. People may think they have you figured out, but they are usually working with very outdated information."
   },
 
   "ChalkBorn": {
     slogan: "Haunted notebook energy.",
     result:
-      "You got ChalkBorn because your personality is 40% haunted notebook, 40% bad idea, and 20% pretending you meant to do that."
+      "You got ChalkBorn. You are observant, weirdly calm, and good at finding patterns. You may act unserious, but you are usually paying more attention than everyone else."
   }
 };
 
 const quizQuestions = [
   {
-    q: "Your friend says you are being dramatic. You say...",
+    q: "When a group project starts going badly, what do you usually do?",
     a: [
-      ["Correct. Finally, someone is paying attention.", "DeadHeart"],
-      ["I’m not dramatic, I’m branded.", "Angel Bloom"],
-      ["I’ll write that on the wall later.", "Ink Ghoul"],
-      ["Say it again but sweeter.", "Lovely Hex"],
-      ["My porcelain feelings are cracking.", "Dollbite"],
-      ["The chalk predicted this.", "ChalkBorn"]
+      ["Try to make the final result still look good, even if it is a disaster behind the scenes.", "Angel Bloom"],
+      ["Take over the part nobody else wants and do it your own way.", "Ink Ghoul"],
+      ["Keep track of who caused the problem, even if you do not say it out loud.", "Lovely Hex"],
+      ["Get frustrated because you care more than you wanted to.", "DeadHeart"],
+      ["Stay quiet, fix your part, and let everyone underestimate you.", "Dollbite"],
+      ["Notice the pattern of what went wrong and remember it for next time.", "ChalkBorn"]
     ]
   },
 
   {
-    q: "Pick the worst place to have a breakdown.",
+    q: "What kind of compliment actually works on you?",
     a: [
-      ["Under perfect lighting", "Angel Bloom"],
-      ["A graffiti-covered stairwell", "Ink Ghoul"],
-      ["During a confession you planned badly", "DeadHeart"],
-      ["At a cute little tea party that was definitely cursed", "Dollbite"],
-      ["In front of a mirror that starts giving advice", "Lovely Hex"],
-      ["In detention while the board writes back", "ChalkBorn"]
+      ["That your style or taste is good.", "Angel Bloom"],
+      ["That you are real and not fake.", "Ink Ghoul"],
+      ["That you are thoughtful or hard to read.", "Lovely Hex"],
+      ["That you care deeply, even when you hide it.", "DeadHeart"],
+      ["That you seem calm but interesting.", "Dollbite"],
+      ["That you are smarter than people expected.", "ChalkBorn"]
     ]
   },
 
   {
-    q: "Your toxic trait is...",
+    q: "Pick the most annoying type of person.",
     a: [
-      ["Turning sadness into an entire identity", "DeadHeart"],
-      ["Looking innocent while being the problem", "Angel Bloom"],
-      ["Starting chaos then saying it was already like that", "Ink Ghoul"],
-      ["Being sweet in a way that makes people nervous", "Lovely Hex"],
-      ["Smiling at the exact wrong time", "Dollbite"],
-      ["Making jokes during actual danger", "ChalkBorn"]
+      ["Someone with no sense of presentation.", "Angel Bloom"],
+      ["Someone who acts better than everyone.", "Ink Ghoul"],
+      ["Someone who forgets what you did for them.", "Lovely Hex"],
+      ["Someone who acts like feelings are embarrassing.", "DeadHeart"],
+      ["Someone who thinks quiet means weak.", "Dollbite"],
+      ["Someone who never thinks before talking.", "ChalkBorn"]
     ]
   },
 
   {
-    q: "Pick your academy crime.",
+    q: "If your profile went viral, what would it probably be for?",
     a: [
-      ["Stealing the morning announcements", "Angel Bloom"],
-      ["Tagging your name on a cursed locker", "Ink Ghoul"],
-      ["Writing love notes that count as threats", "DeadHeart"],
-      ["Starting a hex chain letter", "Lovely Hex"],
-      ["Locking someone inside a dollhouse hallway", "Dollbite"],
-      ["Drawing a door and walking through it", "ChalkBorn"]
+      ["The aesthetic being way better than expected.", "Angel Bloom"],
+      ["A chaotic post that somehow everyone agrees with.", "Ink Ghoul"],
+      ["A cute post with a slightly threatening undertone.", "Lovely Hex"],
+      ["Something emotional that people pretend did not hit them.", "DeadHeart"],
+      ["A picture that looks normal until people notice one weird detail.", "Dollbite"],
+      ["A joke or observation that is way too accurate.", "ChalkBorn"]
     ]
   },
 
   {
-    q: "Pick a profile caption.",
+    q: "What do you usually do when someone hurts your feelings?",
     a: [
-      ["Still glowing. Still unstable.", "Angel Bloom"],
-      ["Sorry about the wall.", "Ink Ghoul"],
-      ["I loved once. It became everyone’s issue.", "DeadHeart"],
-      ["Be nice or be cursed cutely.", "Lovely Hex"],
-      ["Do not tap the glass.", "Dollbite"],
-      ["I was absent but my shadow attended.", "ChalkBorn"]
+      ["Act fine and make yourself look even better.", "Angel Bloom"],
+      ["Distance yourself and stop caring loudly.", "Ink Ghoul"],
+      ["Remember exactly what happened and adjust how you treat them.", "Lovely Hex"],
+      ["Overthink it even if you know you should not.", "DeadHeart"],
+      ["Get quiet and become harder to reach.", "Dollbite"],
+      ["Analyze why it bothered you before reacting.", "ChalkBorn"]
     ]
   },
 
   {
-    q: "Pick a club activity.",
+    q: "Pick the best kind of friend.",
     a: [
-      ["Performing like nothing is wrong", "Angel Bloom"],
-      ["Making a mess and calling it culture", "Ink Ghoul"],
-      ["Crying in formalwear", "DeadHeart"],
-      ["Hexing crushes for character development", "Lovely Hex"],
-      ["Practicing smiling without blinking", "Dollbite"],
-      ["Summoning something from a chalk outline", "ChalkBorn"]
+      ["Someone who hypes you up and makes life feel bigger.", "Angel Bloom"],
+      ["Someone loyal who does not act fake around you.", "Ink Ghoul"],
+      ["Someone who notices small things and remembers them.", "Lovely Hex"],
+      ["Someone who understands your moods without making it weird.", "DeadHeart"],
+      ["Someone calm, strange, and secretly funny.", "Dollbite"],
+      ["Someone smart who can talk about random stuff for hours.", "ChalkBorn"]
     ]
   },
 
   {
-    q: "People underestimate you because...",
+    q: "What is your worst habit?",
     a: [
-      ["You look too cute to be that unstable", "Angel Bloom"],
-      ["You act like you don’t care until you very much do", "Ink Ghoul"],
-      ["You make pain look fashionable", "DeadHeart"],
-      ["You say everything with a heart at the end", "Lovely Hex"],
-      ["You stand too still", "Dollbite"],
-      ["You seem unserious until the lights flicker", "ChalkBorn"]
+      ["Caring too much about how things look.", "Angel Bloom"],
+      ["Rejecting things before they can reject you.", "Ink Ghoul"],
+      ["Keeping score in your head.", "Lovely Hex"],
+      ["Making emotions bigger by replaying them.", "DeadHeart"],
+      ["Acting unaffected when you are not.", "Dollbite"],
+      ["Thinking so much that you miss the simple answer.", "ChalkBorn"]
     ]
   },
 
   {
-    q: "Your final warning label says...",
+    q: "What kind of room would you feel most comfortable in?",
     a: [
-      ["May cause obsession with aesthetics.", "Angel Bloom"],
-      ["Do not leave unattended near paint.", "Ink Ghoul"],
-      ["Emotionally flammable.", "DeadHeart"],
-      ["Sweetness may contain hexes.", "Lovely Hex"],
-      ["Not a toy. Not anymore.", "Dollbite"],
-      ["Do not erase.", "ChalkBorn"]
+      ["A bright, decorated room that feels like a music video.", "Angel Bloom"],
+      ["A messy room with posters, paint, and stuff everywhere.", "Ink Ghoul"],
+      ["A cute room with candles, mirrors, and hidden details.", "Lovely Hex"],
+      ["A dark cozy room with emotional lighting.", "DeadHeart"],
+      ["A clean room with old dolls, soft things, and something slightly off.", "Dollbite"],
+      ["A quiet room with notebooks, chalkboards, and weird little collections.", "ChalkBorn"]
     ]
   }
 ];
@@ -291,6 +312,8 @@ const allItems = [...curses, ...pets, ...colors];
 let state = loadState();
 let quizIndex = 0;
 let quizScore = {};
+let currentCustomizeCategory = "curse";
+let currentCollectionCategory = "curse";
 
 let selected = {
   curse: state.equipped.curse,
@@ -302,7 +325,9 @@ function defaultState() {
   return {
     profile: {
       name: "",
-      monsterType: "DeadHeart",
+      monsterType: "Unrolled",
+      monsterChoices: [],
+      monsterRollsUsed: false,
       club: "Blackout Cheer",
       faction: null
     },
@@ -378,8 +403,10 @@ function showSection(id) {
 
 function saveProfile() {
   state.profile.name = document.getElementById("studentName").value.trim();
-  state.profile.monsterType = document.getElementById("monsterType").value;
   state.profile.club = document.getElementById("club").value;
+
+  const monsterSelect = document.getElementById("monsterType");
+  state.profile.monsterType = monsterSelect.value || "Unrolled";
 
   saveState();
   renderAll();
@@ -404,15 +431,91 @@ function resetPrototype() {
 
   quizIndex = 0;
   quizScore = {};
+  currentCustomizeCategory = "curse";
+  currentCollectionCategory = "curse";
 
   startQuiz();
   renderAll();
+  showSection("homeSection");
+}
+
+function rollMonsterOptions() {
+  if (state.profile.monsterRollsUsed) {
+    document.getElementById("monsterRollText").textContent =
+      "Monster choices are already rolled. Pick one of your 3 options.";
+    return;
+  }
+
+  const shuffled = [...monsterTypes].sort(() => Math.random() - 0.5);
+  state.profile.monsterChoices = shuffled.slice(0, 3);
+  state.profile.monsterType = state.profile.monsterChoices[0];
+  state.profile.monsterRollsUsed = true;
+
+  saveState();
+  renderAll();
+}
+
+function chooseMonster(monster) {
+  if (!state.profile.monsterChoices.includes(monster)) {
+    return;
+  }
+
+  state.profile.monsterType = monster;
+  saveState();
+  renderAll();
+}
+
+function renderMonsterSetup() {
+  const select = document.getElementById("monsterType");
+  const choicesBox = document.getElementById("monsterChoices");
+  const text = document.getElementById("monsterRollText");
+
+  select.innerHTML = "";
+
+  const choices =
+    state.profile.monsterChoices.length > 0
+      ? state.profile.monsterChoices
+      : ["Unrolled"];
+
+  choices.forEach((monster) => {
+    const option = document.createElement("option");
+    option.value = monster;
+    option.textContent = monster;
+    select.appendChild(option);
+  });
+
+  select.value = state.profile.monsterType || choices[0];
+
+  choicesBox.innerHTML = "";
+
+  if (state.profile.monsterChoices.length === 0) {
+    text.textContent = "Roll 3 monster choices, then pick one.";
+    return;
+  }
+
+  text.textContent = "Choose one of your 3 monster options.";
+
+  state.profile.monsterChoices.forEach((monster) => {
+    const btn = document.createElement("button");
+    btn.className =
+      "monster-choice" +
+      (state.profile.monsterType === monster ? " selected" : "");
+
+    btn.textContent = monster;
+
+    btn.onclick = () => {
+      chooseMonster(monster);
+    };
+
+    choicesBox.appendChild(btn);
+  });
 }
 
 function renderID() {
   document.getElementById("studentName").value = state.profile.name || "";
-  document.getElementById("monsterType").value = state.profile.monsterType;
   document.getElementById("club").value = state.profile.club;
+
+  renderMonsterSetup();
 
   const equippedCurse = findItem(state.equipped.curse);
   const equippedPet = findItem(state.equipped.pet);
@@ -421,40 +524,72 @@ function renderID() {
   const accent = equippedColor?.hex || "#ff4fd8";
   document.documentElement.style.setProperty("--id-accent", accent);
 
-  document.getElementById("idName").textContent =
-    state.profile.name || "Unnamed Student";
+  const name = state.profile.name || "Unnamed Student";
+  const monster = state.profile.monsterType || "Unrolled";
+  const faction = state.profile.faction || "No Faction";
+  const club = state.profile.club;
+  const curse = equippedCurse ? equippedCurse.name : "None";
+  const pet = equippedPet ? equippedPet.name : "None";
+  const colorName = equippedColor ? equippedColor.name : "Default";
+  const popularity = calculatePopularityScore();
 
-  document.getElementById("idMonster").textContent =
-    state.profile.monsterType;
-
-  document.getElementById("idFaction").textContent =
-    state.profile.faction || "No Faction";
-
-  document.getElementById("idClub").textContent =
-    state.profile.club;
-
-  document.getElementById("idCurse").textContent =
-    equippedCurse ? equippedCurse.name : "None";
-
-  document.getElementById("idPet").textContent =
-    equippedPet ? equippedPet.name : "None";
-
-  document.getElementById("idColorName").textContent =
-    equippedColor ? equippedColor.name : "Default";
+  document.getElementById("idName").textContent = name;
+  document.getElementById("idMonster").textContent = monster;
+  document.getElementById("idFaction").textContent = faction;
+  document.getElementById("idClub").textContent = club;
+  document.getElementById("idCurse").textContent = curse;
+  document.getElementById("idPet").textContent = pet;
+  document.getElementById("idColorName").textContent = colorName;
+  document.getElementById("idPopularityScore").textContent = popularity;
 
   document.getElementById("verifiedTag").textContent =
     state.profile.faction ? "PLACED" : "UNPLACED";
 
-  const faction = factions[state.profile.faction];
+  const factionData = factions[state.profile.faction];
 
-  document.getElementById("idQuote").textContent = faction
-    ? `“${faction.slogan}”`
+  document.getElementById("idQuote").textContent = factionData
+    ? `“${factionData.slogan}”`
     : "“I haven’t been placed yet.”";
 
   setRarityText("idCurse", equippedCurse?.rarity);
   setRarityText("idPet", equippedPet?.rarity);
   setRarityText("idColorName", equippedColor?.rarity);
 
+  const avatar = getMonsterAvatar(monster);
+  document.getElementById("avatarIcon").textContent = avatar;
+
+  renderMiniID({
+    name,
+    monster,
+    faction,
+    curse,
+    pet,
+    avatar,
+    popularity
+  });
+}
+
+function renderMiniID(data) {
+  document.getElementById("miniName").textContent = data.name;
+  document.getElementById("miniMonster").textContent = data.monster;
+  document.getElementById("miniFaction").textContent = data.faction;
+  document.getElementById("miniCurse").textContent = data.curse;
+  document.getElementById("miniPet").textContent = data.pet;
+  document.getElementById("miniAvatarIcon").textContent = data.avatar;
+
+  document.getElementById("miniVerifiedTag").textContent =
+    state.profile.faction ? "PLACED" : "UNPLACED";
+
+  document.getElementById("homePopularityScore").textContent = data.popularity;
+  document.getElementById("rankingPreviewScore").textContent = data.popularity;
+  document.getElementById("rankingScore").textContent = data.popularity;
+
+  const displayName = state.profile.name || "You";
+  document.getElementById("rankingPreviewName").textContent = displayName;
+  document.getElementById("rankingName").textContent = displayName;
+}
+
+function getMonsterAvatar(monster) {
   const avatarMap = {
     DeadHeart: "♡",
     "Graffiti Ghoul": "✦",
@@ -464,11 +599,11 @@ function renderID() {
     "Mascot Mutant": "☻",
     "Plush Rot": "✿",
     "Skull Idol": "☠",
-    "Moth Kid": "𖤐"
+    "Moth Kid": "𖤐",
+    Unrolled: "?"
   };
 
-  document.getElementById("avatarIcon").textContent =
-    avatarMap[state.profile.monsterType] || "☠";
+  return avatarMap[monster] || "☠";
 }
 
 function setRarityText(elementId, rarity) {
@@ -542,9 +677,11 @@ function renderQuizQuestion() {
     return;
   }
 
+  const shuffledAnswers = [...question.a].sort(() => Math.random() - 0.5);
+
   box.innerHTML = `<h3>${quizIndex + 1}/8 — ${question.q}</h3>`;
 
-  question.a.forEach(([text, faction]) => {
+  shuffledAnswers.forEach(([text, faction]) => {
     const btn = document.createElement("button");
 
     btn.className = "quiz-answer";
@@ -572,6 +709,7 @@ function refreshRollsIfNeeded() {
 }
 
 function rollItem() {
+  animateRollButton();
   refreshRollsIfNeeded();
 
   if (state.rolls.remaining <= 0) {
@@ -594,6 +732,25 @@ function rollItem() {
 
   renderRollCard(rolled, false, owned);
   renderAll();
+}
+
+function animateRollButton() {
+  const btn = document.getElementById("rollButton");
+
+  if (!btn) {
+    return;
+  }
+
+  btn.classList.remove("roll-pop");
+
+  void btn.offsetWidth;
+
+  btn.classList.add("roll-pop");
+
+  setTimeout(() => {
+    btn.classList.remove("roll-pop");
+    btn.blur();
+  }, 260);
 }
 
 function weightedRoll() {
@@ -659,6 +816,9 @@ function renderRolls() {
   document.getElementById("rollsLeft").textContent =
     state.rolls.remaining;
 
+  document.getElementById("homeRollsLeft").textContent =
+    state.rolls.remaining;
+
   document.getElementById("rollResetText").textContent =
     nextRefreshText();
 }
@@ -675,14 +835,31 @@ function nextRefreshText() {
   return `Rolls refresh in ${hours}h ${minutes}m.`;
 }
 
+function showCustomizeCategory(category) {
+  currentCustomizeCategory = category;
+
+  document.querySelectorAll(".tab-button").forEach((btn) => {
+    btn.classList.remove("active");
+  });
+
+  const buttons = document.querySelectorAll(".tab-button");
+
+  if (category === "curse") buttons[0].classList.add("active");
+  if (category === "pet") buttons[1].classList.add("active");
+  if (category === "color") buttons[2].classList.add("active");
+
+  renderCustomize();
+}
+
 function renderCustomize() {
   selected.curse = state.equipped.curse;
   selected.pet = state.equipped.pet;
   selected.color = state.equipped.color;
 
-  renderCustomCategory("customCurses", "curse");
-  renderCustomCategory("customPets", "pet");
-  renderCustomCategory("customColors", "color");
+  const title = document.getElementById("customizeCurrentTitle");
+  title.textContent = labelCategoryPlural(currentCustomizeCategory);
+
+  renderCustomCategory("customizeGrid", currentCustomizeCategory);
 }
 
 function renderCustomCategory(elementId, category) {
@@ -751,10 +928,27 @@ function clearEquipped() {
   renderAll();
 }
 
+function showCollectionCategory(category) {
+  currentCollectionCategory = category;
+
+  document.querySelectorAll(".collection-tab-button").forEach((btn) => {
+    btn.classList.remove("active");
+  });
+
+  const buttons = document.querySelectorAll(".collection-tab-button");
+
+  if (category === "curse") buttons[0].classList.add("active");
+  if (category === "pet") buttons[1].classList.add("active");
+  if (category === "color") buttons[2].classList.add("active");
+
+  renderCollection();
+}
+
 function renderCollection() {
-  renderCollectionCategory("collectionCurses", "curse");
-  renderCollectionCategory("collectionPets", "pet");
-  renderCollectionCategory("collectionColors", "color");
+  const title = document.getElementById("collectionCurrentTitle");
+  title.textContent = labelCategoryPlural(currentCollectionCategory);
+
+  renderCollectionCategory("collectionGrid", currentCollectionCategory);
 
   document.getElementById("curseCount").textContent =
     state.inventory.curse.length;
@@ -764,6 +958,13 @@ function renderCollection() {
 
   document.getElementById("colorCount").textContent =
     state.inventory.color.length;
+
+  const totalItems =
+    state.inventory.curse.length +
+    state.inventory.pet.length +
+    state.inventory.color.length;
+
+  document.getElementById("homeCollectionCount").textContent = totalItems;
 }
 
 function renderCollectionCategory(elementId, category) {
@@ -795,6 +996,34 @@ function renderCollectionCategory(elementId, category) {
     });
 }
 
+function calculatePopularityScore() {
+  let score = 0;
+
+  ["curse", "pet", "color"].forEach((category) => {
+    state.inventory[category].forEach((id) => {
+      const ownedItem = findItem(id);
+
+      if (ownedItem) {
+        score += rarityScore[ownedItem.rarity] || 0;
+      }
+    });
+  });
+
+  const equippedCurse = findItem(state.equipped.curse);
+  const equippedPet = findItem(state.equipped.pet);
+  const equippedColor = findItem(state.equipped.color);
+
+  if (equippedCurse) score += Math.floor((rarityScore[equippedCurse.rarity] || 0) * 0.25);
+  if (equippedPet) score += Math.floor((rarityScore[equippedPet.rarity] || 0) * 0.25);
+  if (equippedColor) score += Math.floor((rarityScore[equippedColor.rarity] || 0) * 0.25);
+
+  if (state.profile.faction) score += 25;
+  if (state.profile.monsterType && state.profile.monsterType !== "Unrolled") score += 15;
+  if (state.profile.name) score += 10;
+
+  return score;
+}
+
 function findItem(id) {
   if (!id) {
     return null;
@@ -808,6 +1037,16 @@ function labelCategory(category) {
     curse: "Curse",
     pet: "Pet",
     color: "ID Color"
+  };
+
+  return labels[category] || category;
+}
+
+function labelCategoryPlural(category) {
+  const labels = {
+    curse: "Curses",
+    pet: "Pets",
+    color: "ID Colors"
   };
 
   return labels[category] || category;
