@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GloomPop Academy</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="noise"></div>
+
+  <header class="hero">
+    <p class="eyebrow">Welcome to detention</p>
+    <h1>GloomPop Academy</h1>
+    <p class="tagline">
+      A cute-creepy academy for cursed students, glitter goblins, ink brats, dollhouse disasters, and emotionally unstable mascots.
+    </p>
+
+    <div class="nav">
+      <button onclick="showSection('idMaker')">Make Student ID</button>
+      <button onclick="showSection('quiz')">Faction Quiz</button>
+      <button onclick="showSection('fortune')">Daily Curse</button>
+      <button onclick="showSection('cards')">Draw Card</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. CURSED STUDENT ID GENERATOR -->
+    <section id="idMaker" class="panel active">
+      <h2>Cursed Student ID Generator</h2>
+      <p class="section-copy">Build your fake academy ID. Screenshot it, save it, or use it as an OC starter.</p>
+
+      <div class="grid two">
+        <div class="form-card">
+          <label>Student Name</label>
+          <input id="studentName" placeholder="Example: Moxie Rot" maxlength="24" />
+
+          <label>Monster Type</label>
+          <select id="monsterType">
+            <option>Bubblegum Ghoul</option>
+            <option>Ink Brat</option>
+            <option>Rotten Angel</option>
+            <option>Chalk Demon</option>
+            <option>Static Bunny</option>
+            <option>Velvet Bat</option>
+            <option>Dollhouse Witch</option>
+            <option>Skullpop Idol</option>
+          </select>
+
+          <label>Faction</label>
+          <select id="idFaction">
+            <option>Rotten Hearts</option>
+            <option>Ink Rats</option>
+            <option>Velvet Bats</option>
+            <option>Static Angels</option>
+            <option>Chalk Demons</option>
+            <option>Dollhouse Riot</option>
+          </select>
+
+          <label>Club</label>
+          <select id="club">
+            <option>Detention Choir</option>
+            <option>Graveyard Fashion Club</option>
+            <option>Possessed Mascot Team</option>
+            <option>Drama Coven</option>
+            <option>Ink Skater Crew</option>
+            <option>Cursed Yearbook Staff</option>
+          </select>
+
+          <label>Favorite Curse</label>
+          <select id="curse">
+            <option>Glitter Rot</option>
+            <option>Mirror Bite</option>
+            <option>Homework Haunting</option>
+            <option>Acid Tears</option>
+            <option>Static Halo</option>
+            <option>Chalk Fever</option>
+          </select>
+
+          <button class="primary" onclick="makeID()">Generate ID</button>
+        </div>
+
+        <div class="student-id" id="studentID">
+          <div class="id-top">
+            <span>GLOOMPOP ACADEMY</span>
+            <span>STUDENT ID</span>
+          </div>
+          <div class="id-body">
+            <div class="avatar">☠</div>
+            <div>
+              <h3 id="cardName">Moxie Rot</h3>
+              <p id="cardType">Bubblegum Ghoul</p>
+              <p><b>Faction:</b> <span id="cardFaction">Rotten Hearts</span></p>
+              <p><b>Club:</b> <span id="cardClub">Detention Choir</span></p>
+              <p><b>Curse:</b> <span id="cardCurse">Glitter Rot</span></p>
+              <p class="quote" id="cardQuote">“I’m not dramatic. I’m foreshadowing.”</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. FACTION QUIZ WEBSITE -->
+    <section id="quiz" class="panel">
+      <h2>Faction Quiz</h2>
+      <p class="section-copy">Answer fast. The academy already knows too much.</p>
+
+      <div id="quizBox" class="quiz-box"></div>
+      <button class="primary" onclick="startQuiz()">Restart Quiz</button>
+    </section>
+
+    <!-- 4. DAILY CURSED FORTUNE -->
+    <section id="fortune" class="panel">
+      <h2>Daily Cursed Fortune</h2>
+      <p class="section-copy">One curse per day. Do not argue with the lockers.</p>
+
+      <div class="fortune-card" id="fortuneCard">
+        <h3>Today's Curse</h3>
+        <p id="fortuneText"></p>
+      </div>
+
+      <button class="primary" onclick="makeFortune()">Reroll Curse</button>
+    </section>
+
+    <!-- 5. COLLECTIBLE CHARACTER CARD SITE -->
+    <section id="cards" class="panel">
+      <h2>Collectible Character Cards</h2>
+      <p class="section-copy">Draw a student from the cursed yearbook.</p>
+
+      <div class="grid two">
+        <div class="draw-area">
+          <button class="big-draw" onclick="drawCard()">Draw Student Card</button>
+          <p class="tiny">Cards save to your browser gallery.</p>
+          <button onclick="clearGallery()">Clear Gallery</button>
+        </div>
+
+        <div class="character-card" id="characterCard">
+          <span class="rarity" id="cardRarity">Rare</span>
+          <h3 id="charName">Bubblegum Ghoul</h3>
+          <p id="charDesc">A detention legend who cries acid glitter and smiles during fire drills.</p>
+          <p><b>Power:</b> <span id="charPower">Turns embarrassment into poison.</span></p>
+          <p><b>Weakness:</b> <span id="charWeakness">Sincere compliments.</span></p>
+        </div>
+      </div>
+
+      <h3>Your Gallery</h3>
+      <div id="gallery" class="gallery"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>GloomPop Academy prototype. Built for weird loyal fans, cursed OCs, and screenshot sharing.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
