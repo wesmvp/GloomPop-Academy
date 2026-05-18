@@ -3,510 +3,165 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>GloomPop Academy</title>
-
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
   <div class="noise"></div>
-
-  <header class="hero home-hero">
+  <header class="hero">
     <p class="eyebrow">Enrollment is permanent</p>
-
     <h1>GloomPop Academy</h1>
-
-    <p class="tagline">
-      Build your academy ID. Roll monsters, curses, pets, and profile colors.
-      Climb the popularity rankings and make your student profile worth posting.
-    </p>
+    <p class="tagline">Build your academy ID. Roll monsters, curses, pets, and profile colors. Climb popularity rankings.</p>
   </header>
 
   <main>
-    <!-- HOME / ACADEMY HUB -->
     <section id="homeSection" class="panel active">
+      <div class="auth-card">
+        <div>
+          <p class="eyebrow">Account</p>
+          <h3 id="authStatus">Signed out</h3>
+          <p class="tiny">Visitors can view the hub and rankings. Sign in to create an ID, roll items, customize, and save progress.</p>
+        </div>
+        <div id="authForms" class="auth-grid">
+          <input id="authEmail" type="email" placeholder="Email" />
+          <input id="authPassword" type="password" placeholder="Password" />
+          <button onclick="signUpWithEmail()">Sign Up</button>
+          <button onclick="loginWithEmail()">Log In</button>
+          <button class="primary auth-google" onclick="loginWithGoogle()">Continue with Google</button>
+        </div>
+        <div id="signedInBox" class="hidden"><button onclick="logoutUser()">Log Out</button></div>
+      </div>
+
       <div class="home-grid">
         <div class="home-main-card">
           <p class="eyebrow">Academy Hub</p>
-
           <h2>Welcome back, student.</h2>
-
-          <p class="section-copy">
-            Your Student ID is your profile, your collection, and your flex.
-            Roll better items, lock your faction, customize your card, and climb popularity.
-          </p>
-
-          <div class="hub-nav">
-            <button class="primary" onclick="showSection('idSection')">
-              Student ID
-            </button>
-
-            <button onclick="showSection('quizSection')">
-              Faction Quiz
-            </button>
-
-            <button onclick="showSection('rollSection')">
-              Daily Rolls
-            </button>
-
-            <button onclick="showSection('customizeSection')">
-              Customize
-            </button>
-
-            <button onclick="showSection('collectionSection')">
-              Collection
-            </button>
-
-            <button onclick="showSection('rankingSection')">
-              Rankings
-            </button>
-          </div>
+          <p class="section-copy">Your Student ID is your profile, your collection, and your flex.</p>
 
           <div class="event-board">
             <h3>Updates & Events</h3>
+            <div class="event-item"><b>Current Build:</b> Firebase-ready profile collector with ID creation, faction placement, daily rolls, collection, customization, and popularity scoring.</div>
+            <div class="event-item"><b>Next Build:</b> Public profiles, real server-side rankings, and limited event drops.</div>
+            <div class="event-item"><b>Planned Event:</b> Blackout Cheer Week — limited drops and temporary ranking bonuses.</div>
+          </div>
 
-            <div class="event-item">
-              <b>Current Build:</b>
-              Local prototype with Student ID creation, faction placement, daily rolls,
-              item collection, customization, and popularity scoring.
-            </div>
-
-            <div class="event-item">
-              <b>Next Build:</b>
-              Firebase accounts, saved profiles, server-side rankings, and public student IDs.
-            </div>
-
-            <div class="event-item">
-              <b>Planned Event:</b>
-              Blackout Cheer Week — limited drops and temporary ranking bonuses.
-            </div>
+          <div class="hub-nav">
+            <button class="primary" onclick="showSection('idSection')">Student ID</button>
+            <button onclick="showSection('quizSection')">Faction Quiz</button>
+            <button onclick="showSection('rollSection')">Daily Rolls</button>
+            <button onclick="showSection('customizeSection')">Customize</button>
+            <button onclick="showSection('collectionSection')">Collection</button>
+            <button onclick="showSection('rankingSection')">Rankings</button>
           </div>
         </div>
 
         <aside class="home-side">
           <h3>Mini ID</h3>
-
-          <div class="mini-id" id="miniID">
-            <div class="mini-id-top">
-              <span>GLOOMPOP</span>
-              <span id="miniVerifiedTag">NO FACTION</span>
-            </div>
-
+          <div class="mini-id">
+            <div class="mini-id-top"><span>GLOOMPOP</span><span id="miniVerifiedTag">No Faction</span></div>
             <div class="mini-id-body">
               <div class="mini-avatar" id="miniAvatarIcon">?</div>
-
               <div>
                 <h4 id="miniName">Unnamed Student</h4>
-
                 <p id="miniMonster">Unrolled</p>
-
-                <p>
-                  <b>Faction:</b>
-                  <span id="miniFaction">No Faction</span>
-                </p>
-
-                <p>
-                  <b>Curse:</b>
-                  <span id="miniCurse">None</span>
-                </p>
-
-                <p>
-                  <b>Pet:</b>
-                  <span id="miniPet">None</span>
-                </p>
+                <p><b>Faction:</b> <span id="miniFaction">No Faction</span></p>
+                <p><b>Curse:</b> <span id="miniCurse">None</span></p>
+                <p><b>Pet:</b> <span id="miniPet">None</span></p>
               </div>
             </div>
           </div>
-
           <div class="quick-stats">
-            <div>
-              <b id="homeRollsLeft">3</b>
-              <span>Rolls Left</span>
-            </div>
-
-            <div>
-              <b id="homeCollectionCount">0</b>
-              <span>Items Owned</span>
-            </div>
-
-            <div>
-              <b id="homePopularityScore">0</b>
-              <span>Popularity</span>
-            </div>
+            <div><b id="homeRollsLeft">3</b><span>Rolls Left</span></div>
+            <div><b id="homeCollectionCount">0</b><span>Items Owned</span></div>
+            <div><b id="homePopularityScore">0</b><span>Popularity</span></div>
           </div>
-
           <div class="ranking-preview">
             <h3>Popularity Preview</h3>
-
-            <ol>
-              <li>
-                <span>RottenMoxie</span>
-                <b>980</b>
-              </li>
-
-              <li>
-                <span>StaticSaint</span>
-                <b>860</b>
-              </li>
-
-              <li>
-                <span id="rankingPreviewName">You</span>
-                <b id="rankingPreviewScore">0</b>
-              </li>
+            <ol id="rankingPreviewList">
+              <li><span>RottenMoxie</span><b>980</b></li>
+              <li><span>StaticSaint</span><b>860</b></li>
+              <li><span id="rankingPreviewName">You</span><b id="rankingPreviewScore">0</b></li>
             </ol>
-
-            <button onclick="showSection('rankingSection')">
-              View Rankings
-            </button>
+            <button onclick="showSection('rankingSection')">View Rankings</button>
           </div>
         </aside>
       </div>
     </section>
 
-    <!-- STUDENT ID PAGE -->
     <section id="idSection" class="panel">
+      <button class="back-home" onclick="showSection('homeSection')">← Back to Academy Hub</button>
       <h2>Student ID</h2>
-
-      <p class="section-copy">
-        Your Student ID is your main profile. Your name becomes permanent after setup.
-        Club and monster can be changed later from your saved options.
-      </p>
-
+      <p class="section-copy">Your name becomes permanent after setup. Club and monster can be changed later from your saved options.</p>
       <div class="id-page-grid">
-        <!-- SETUP FORM -->
         <div class="form-card" id="idSetupCard">
           <h3>Enrollment Setup</h3>
-
-          <label for="studentName">Student Name</label>
-          <input
-            id="studentName"
-            placeholder="Example: Alastor"
-            maxlength="24"
-          />
-
-          <label for="monsterType">Monster Type</label>
-
-          <div class="monster-roll-row">
-            <select id="monsterType">
-              <option>Unrolled</option>
-            </select>
-
-            <button
-              class="dice-button"
-              onclick="rollMonsterOptions()"
-              title="Roll 3 monster choices"
-            >
-              🎲
-            </button>
-          </div>
-
-          <p class="tiny" id="monsterRollText">
-            Roll 3 monster choices, then pick one.
-          </p>
-
+          <label>Student Name</label><input id="studentName" placeholder="Example: Alastor" maxlength="24" />
+          <label>Monster Type</label>
+          <div class="monster-roll-row"><select id="monsterType"><option>Unrolled</option></select><button class="dice-button" onclick="rollMonsterOptions()">🎲</button></div>
+          <p class="tiny" id="monsterRollText">Roll 3 monster choices, then pick one.</p>
           <div id="monsterChoices" class="monster-choices"></div>
-
-          <label for="club">Club</label>
-          <select id="club">
-            <option>Blackout Cheer</option>
-            <option>Bathroom Mirror Club</option>
-            <option>Locker Hex Society</option>
-            <option>Funeral Committee</option>
-            <option>Yearbook</option>
-            <option>Graveyard Fashion</option>
-            <option>NeonBruise</option>
-            <option>The Splatterhouse</option>
-          </select>
-
-          <button class="primary" onclick="saveProfile()">
-            Save Student Info
-          </button>
-
-          <button onclick="resetPrototype()">
-            Reset Prototype Save
-          </button>
+          <label>Club</label><select id="club"><option>Blackout Cheer</option><option>Bathroom Mirror Club</option><option>Locker Hex Society</option><option>Funeral Committee</option><option>Yearbook</option><option>Graveyard Fashion</option><option>NeonBruise</option><option>The Splatterhouse</option></select>
+          <button class="primary" onclick="saveProfile()">Save Student Info</button>
+          <button onclick="resetPrototype()">Reset Prototype Save</button>
         </div>
-
-        <!-- EDIT SAVED OPTIONS -->
         <div class="form-card hidden" id="idEditCard">
           <h3>Profile Options</h3>
-
-          <p class="tiny">
-            Your name is locked. You can still change your club and switch between
-            your rolled monster options.
-          </p>
-
-          <label for="editMonsterType">Monster Type</label>
-          <select id="editMonsterType"></select>
-
-          <label for="editClub">Club</label>
-          <select id="editClub">
-            <option>Blackout Cheer</option>
-            <option>Bathroom Mirror Club</option>
-            <option>Locker Hex Society</option>
-            <option>Funeral Committee</option>
-            <option>Yearbook</option>
-            <option>Graveyard Fashion</option>
-            <option>NeonBruise</option>
-            <option>The Splatterhouse</option>
-          </select>
-
-          <button class="primary" onclick="saveProfileOptions()">
-            Save Changes
-          </button>
-
-          <button onclick="showIdSetupEditor()">
-            Change Club / Monster
-          </button>
-
-          <button onclick="resetPrototype()">
-            Reset Prototype Save
-          </button>
+          <p class="tiny">Your name is locked. You can change your club and switch between your rolled monster options.</p>
+          <label>Monster Type</label><select id="editMonsterType"></select>
+          <label>Club</label><select id="editClub"><option>Blackout Cheer</option><option>Bathroom Mirror Club</option><option>Locker Hex Society</option><option>Funeral Committee</option><option>Yearbook</option><option>Graveyard Fashion</option><option>NeonBruise</option><option>The Splatterhouse</option></select>
+          <button class="primary" onclick="saveProfileOptions()">Save Changes</button>
+          <button onclick="resetPrototype()">Reset Prototype Save</button>
         </div>
-
-        <!-- ID CARD -->
-        <div class="student-id" id="studentID">
-          <div class="id-top">
-            <span>GLOOMPOP ACADEMY</span>
-            <span id="verifiedTag">NO FACTION</span>
-          </div>
-
+        <div class="student-id">
+          <div class="id-top"><span>GLOOMPOP ACADEMY</span><span id="verifiedTag">No Faction</span></div>
           <div class="id-body">
             <div class="avatar" id="avatarIcon">?</div>
-
             <div class="id-info">
-              <h3 id="idName">Unnamed Student</h3>
-
-              <p id="idMonster">Unrolled</p>
-
-              <p>
-                <b>Club:</b>
-                <span id="idClub">Blackout Cheer</span>
-              </p>
-
-              <p>
-                <b>Curse:</b>
-                <span id="idCurse">None</span>
-              </p>
-
-              <p>
-                <b>Pet:</b>
-                <span id="idPet">None</span>
-              </p>
-
-              <p>
-                <b>Popularity:</b>
-                <span id="idPopularityScore">0</span>
-              </p>
-
-              <p class="quote" id="idQuote">
-                “I haven’t been placed yet.”
-              </p>
+              <h3 id="idName">Unnamed Student</h3><p id="idMonster">Unrolled</p>
+              <p><b>Club:</b> <span id="idClub">Blackout Cheer</span></p>
+              <p><b>Curse:</b> <span id="idCurse">None</span></p>
+              <p><b>Pet:</b> <span id="idPet">None</span></p>
+              <p><b>Popularity:</b> <span id="idPopularityScore">0</span></p>
+              <p class="quote" id="idQuote">“I haven’t been placed yet.”</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- FACTION QUIZ PAGE -->
-    <section id="quizSection" class="panel">
-      <h2>Faction Quiz</h2>
+    <section id="quizSection" class="panel"><button class="back-home" onclick="showSection('homeSection')">← Back to Academy Hub</button><h2>Faction Quiz</h2><p class="section-copy">One placement. No retakes unless you reset the prototype.</p><div id="quizLocked" class="locked hidden"></div><div id="quizBox" class="quiz-box"></div></section>
 
-      <p class="section-copy">
-        One placement. No retakes unless you reset the prototype.
-      </p>
-
-      <div id="quizLocked" class="locked hidden"></div>
-
-      <div id="quizBox" class="quiz-box"></div>
-    </section>
-
-    <!-- DAILY ROLLS PAGE -->
     <section id="rollSection" class="panel">
-      <h2>Daily Rolls</h2>
-
-      <p class="section-copy">
-        You get 3 rolls every 24 hours. Rolls can give curses, pets, or ID colors.
-        Duplicates give nothing and still use a roll.
-      </p>
-
+      <button class="back-home" onclick="showSection('homeSection')">← Back to Academy Hub</button><h2>Daily Rolls</h2>
+      <p class="section-copy">You get 3 rolls every 24 hours. Rolls can give curses, pets, or ID colors. Duplicates give nothing and still use a roll.</p>
       <div class="grid two">
-        <div class="draw-area">
-          <div class="roll-count">
-            <span id="rollsLeft">3</span>
-            <small>rolls left</small>
-          </div>
-
-          <button id="rollButton" class="big-draw" onclick="rollItem()">
-            Roll Academy Item
-          </button>
-
-          <p class="tiny" id="rollResetText">
-            Rolls refresh every 24 hours.
-          </p>
-        </div>
-
-        <div class="roll-card" id="rollCard">
-          <span class="rarity common" id="rollRarity">Common</span>
-
-          <h3 id="rollName">No roll yet</h3>
-
-          <p id="rollCategory">Category: —</p>
-
-          <p id="rollDesc">
-            The locker is waiting.
-          </p>
-        </div>
+        <div class="draw-area"><div class="roll-count"><span id="rollsLeft">3</span><small>rolls left</small></div><button id="rollButton" class="big-draw" onclick="rollItem()">Roll Academy Item</button><p class="tiny" id="rollResetText">Rolls refresh every 24 hours.</p></div>
+        <div class="roll-card"><span class="rarity common" id="rollRarity">Common</span><h3 id="rollName">No roll yet</h3><p id="rollCategory">Category: —</p><p id="rollDesc">The locker is waiting.</p></div>
       </div>
     </section>
 
-    <!-- CUSTOMIZE ID PAGE -->
     <section id="customizeSection" class="panel">
-      <h2>Customize ID</h2>
-
-      <p class="section-copy">
-        Equip one curse, one pet, and one ID color.
-      </p>
-
-      <div class="customize-actions">
-        <button class="primary" onclick="applyCustomization()">
-          Apply to ID
-        </button>
-
-        <button onclick="clearEquipped()">
-          Clear Equipped Items
-        </button>
-      </div>
-
-      <div class="category-tabs">
-        <button class="tab-button active" onclick="showCustomizeCategory('curse')">
-          Curses
-        </button>
-
-        <button class="tab-button" onclick="showCustomizeCategory('pet')">
-          Pets
-        </button>
-
-        <button class="tab-button" onclick="showCustomizeCategory('color')">
-          ID Colors
-        </button>
-      </div>
-
-      <div id="customizeCurrentTitle" class="category-title">
-        Curses
-      </div>
-
-      <div id="customizeGrid" class="item-grid compact"></div>
+      <button class="back-home" onclick="showSection('homeSection')">← Back to Academy Hub</button><h2>Customize ID</h2><p class="section-copy">Equip one curse, one pet, and one ID color.</p>
+      <div class="customize-actions"><button class="primary" onclick="applyCustomization()">Apply to ID</button><button onclick="clearEquipped()">Clear Equipped Items</button></div>
+      <div class="category-tabs"><button class="tab-button active" onclick="showCustomizeCategory('curse')">Curses</button><button class="tab-button" onclick="showCustomizeCategory('pet')">Pets</button><button class="tab-button" onclick="showCustomizeCategory('color')">ID Colors</button></div>
+      <div id="customizeCurrentTitle" class="category-title">Curses</div><div id="customizeGrid" class="item-grid compact"></div>
     </section>
 
-    <!-- COLLECTION PAGE -->
     <section id="collectionSection" class="panel">
-      <h2>Collection</h2>
-
-      <p class="section-copy">
-        Everything you own. Later this becomes public profiles, trading, and rarity flexing.
-      </p>
-
-      <div class="collection-stats">
-        <div>
-          <b id="curseCount">0</b>
-          <span>Curses</span>
-        </div>
-
-        <div>
-          <b id="petCount">0</b>
-          <span>Pets</span>
-        </div>
-
-        <div>
-          <b id="colorCount">0</b>
-          <span>Colors</span>
-        </div>
-      </div>
-
-      <div class="category-tabs">
-        <button class="collection-tab-button active" onclick="showCollectionCategory('curse')">
-          Curses
-        </button>
-
-        <button class="collection-tab-button" onclick="showCollectionCategory('pet')">
-          Pets
-        </button>
-
-        <button class="collection-tab-button" onclick="showCollectionCategory('color')">
-          ID Colors
-        </button>
-      </div>
-
-      <div id="collectionCurrentTitle" class="category-title">
-        Curses
-      </div>
-
-      <div id="collectionGrid" class="gallery compact"></div>
+      <button class="back-home" onclick="showSection('homeSection')">← Back to Academy Hub</button><h2>Collection</h2><p class="section-copy">Everything you own. Later this becomes public profiles, trading, and rarity flexing.</p>
+      <div class="collection-stats"><div><b id="curseCount">0</b><span>Curses</span></div><div><b id="petCount">0</b><span>Pets</span></div><div><b id="colorCount">0</b><span>Colors</span></div></div>
+      <div class="category-tabs"><button class="collection-tab-button active" onclick="showCollectionCategory('curse')">Curses</button><button class="collection-tab-button" onclick="showCollectionCategory('pet')">Pets</button><button class="collection-tab-button" onclick="showCollectionCategory('color')">ID Colors</button></div>
+      <div id="collectionCurrentTitle" class="category-title">Curses</div><div id="collectionGrid" class="gallery compact"></div>
     </section>
 
-    <!-- RANKINGS PAGE -->
     <section id="rankingSection" class="panel">
-      <h2>Popularity Rankings</h2>
-
-      <p class="section-copy">
-        Prototype rankings are local/fake for now. Later this will be server-side with Firebase.
-      </p>
-
-      <div class="ranking-board">
-        <div class="ranking-row">
-          <span>#1</span>
-          <b>RottenMoxie</b>
-          <em>980 popularity</em>
-        </div>
-
-        <div class="ranking-row">
-          <span>#2</span>
-          <b>StaticSaint</b>
-          <em>860 popularity</em>
-        </div>
-
-        <div class="ranking-row">
-          <span>#3</span>
-          <b>DollhouseHex</b>
-          <em>720 popularity</em>
-        </div>
-
-        <div class="ranking-row player-rank">
-          <span>#?</span>
-          <b id="rankingName">You</b>
-          <em><span id="rankingScore">0</span> popularity</em>
-        </div>
-      </div>
-
-      <div class="event-board">
-        <h3>Server Features Later</h3>
-
-        <div class="event-item">
-          <b>Firebase Auth:</b>
-          email/password and Google sign-in.
-        </div>
-
-        <div class="event-item">
-          <b>Firestore Rankings:</b>
-          compares popularity score globally.
-        </div>
-
-        <div class="event-item">
-          <b>Global Chat:</b>
-          academy lobby chat with usernames and profile links.
-        </div>
-      </div>
+      <button class="back-home" onclick="showSection('homeSection')">← Back to Academy Hub</button><h2>Popularity Rankings</h2><p class="section-copy">Rankings load from Firebase when available. Local/fake rankings display as fallback.</p>
+      <div class="ranking-board" id="rankingBoard"><div class="ranking-row"><span>#1</span><b>RottenMoxie</b><em>980 popularity</em></div><div class="ranking-row"><span>#2</span><b>StaticSaint</b><em>860 popularity</em></div><div class="ranking-row"><span>#3</span><b>DollhouseHex</b><em>720 popularity</em></div><div class="ranking-row player-rank"><span>#?</span><b id="rankingName">You</b><em><span id="rankingScore">0</span> popularity</em></div></div>
     </section>
   </main>
 
-  <footer>
-    <p>
-      GloomPop Academy prototype v5 — academy hub, permanent ID setup, rolls, collections, and rankings.
-    </p>
-  </footer>
-
+  <footer><p>GloomPop Academy prototype — Firebase-ready academy profile collector.</p></footer>
+  <script type="module" src="firebase.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
