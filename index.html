@@ -12,32 +12,146 @@
 <body>
   <div class="noise"></div>
 
-  <header class="hero">
+  <header class="hero home-hero">
     <p class="eyebrow">Enrollment is permanent</p>
 
     <h1>GloomPop Academy</h1>
 
     <p class="tagline">
-      Take your faction placement once. Roll academy items every 24 hours.
-      Build a student ID worth posting.
+      Build your academy ID. Roll monsters, curses, pets, and profile colors.
+      Climb the popularity rankings and make your student profile worth posting.
     </p>
 
     <div class="nav">
+      <button onclick="showSection('homeSection')">Home</button>
       <button onclick="showSection('idSection')">Student ID</button>
       <button onclick="showSection('quizSection')">Faction Quiz</button>
       <button onclick="showSection('rollSection')">Daily Rolls</button>
-      <button onclick="showSection('customizeSection')">Customize ID</button>
+      <button onclick="showSection('customizeSection')">Customize</button>
       <button onclick="showSection('collectionSection')">Collection</button>
+      <button onclick="showSection('rankingSection')">Rankings</button>
     </div>
   </header>
 
   <main>
+    <!-- HOME SCREEN -->
+    <section id="homeSection" class="panel active">
+      <div class="home-grid">
+        <div class="home-main-card">
+          <p class="eyebrow">Academy Hub</p>
+          <h2>Welcome back, student.</h2>
+
+          <p class="section-copy">
+            Your Student ID is your profile, your collection, and your flex.
+            Roll better items, lock your faction, customize your card, and climb popularity.
+          </p>
+
+          <div class="home-actions">
+            <button class="primary" onclick="showSection('idSection')">
+              Edit Student ID
+            </button>
+
+            <button onclick="showSection('rollSection')">
+              Use Daily Rolls
+            </button>
+
+            <button onclick="showSection('customizeSection')">
+              Customize Profile
+            </button>
+          </div>
+
+          <div class="event-board">
+            <h3>Updates & Events</h3>
+
+            <div class="event-item">
+              <b>Coming Soon:</b>
+              Popularity Rankings will compare students by item rarity score.
+            </div>
+
+            <div class="event-item">
+              <b>Future Event:</b>
+              Blackout Cheer Week — limited pets, colors, and curse drops.
+            </div>
+
+            <div class="event-item">
+              <b>Planned:</b>
+              Firebase accounts, global chat, public profiles, and trading.
+            </div>
+          </div>
+        </div>
+
+        <aside class="home-side">
+          <h3>Mini ID</h3>
+
+          <div class="mini-id" id="miniID">
+            <div class="mini-id-top">
+              <span>GLOOMPOP</span>
+              <span id="miniVerifiedTag">UNPLACED</span>
+            </div>
+
+            <div class="mini-id-body">
+              <div class="mini-avatar" id="miniAvatarIcon">☠</div>
+
+              <div>
+                <h4 id="miniName">Unnamed Student</h4>
+                <p id="miniMonster">No Monster</p>
+                <p>
+                  <b>Faction:</b>
+                  <span id="miniFaction">No Faction</span>
+                </p>
+                <p>
+                  <b>Curse:</b>
+                  <span id="miniCurse">None</span>
+                </p>
+                <p>
+                  <b>Pet:</b>
+                  <span id="miniPet">None</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="quick-stats">
+            <div>
+              <b id="homeRollsLeft">3</b>
+              <span>Rolls Left</span>
+            </div>
+
+            <div>
+              <b id="homeCollectionCount">0</b>
+              <span>Items Owned</span>
+            </div>
+
+            <div>
+              <b id="homePopularityScore">0</b>
+              <span>Popularity</span>
+            </div>
+          </div>
+
+          <div class="ranking-preview">
+            <h3>Popularity Preview</h3>
+
+            <ol>
+              <li><span>RottenMoxie</span><b>980</b></li>
+              <li><span>StaticSaint</span><b>860</b></li>
+              <li><span id="rankingPreviewName">You</span><b id="rankingPreviewScore">0</b></li>
+            </ol>
+
+            <button onclick="showSection('rankingSection')">
+              View Rankings
+            </button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
     <!-- STUDENT ID PAGE -->
-    <section id="idSection" class="panel active">
+    <section id="idSection" class="panel">
       <h2>Student ID</h2>
 
       <p class="section-copy">
-        Your faction is locked by the quiz. Your curse, pet, and ID color come from rolls.
+        Your Student ID is the main profile. Name and club are chosen.
+        Monster type is rolled during setup. Faction is locked by the quiz.
       </p>
 
       <div class="grid two">
@@ -51,17 +165,26 @@
           />
 
           <label for="monsterType">Monster Type</label>
-          <select id="monsterType">
-            <option>DeadHeart</option>
-            <option>Graffiti Ghoul</option>
-            <option>LovelyAngel</option>
-            <option>Velvet Bat</option>
-            <option>ChalkBorn</option>
-            <option>Mascot Mutant</option>
-            <option>Plush Rot</option>
-            <option>Skull Idol</option>
-            <option>Moth Kid</option>
-          </select>
+
+          <div class="monster-roll-row">
+            <select id="monsterType">
+              <option>Unrolled</option>
+            </select>
+
+            <button
+              class="dice-button"
+              onclick="rollMonsterOptions()"
+              title="Roll 3 monster choices"
+            >
+              🎲
+            </button>
+          </div>
+
+          <p class="tiny" id="monsterRollText">
+            Roll 3 monster choices, then pick one.
+          </p>
+
+          <div id="monsterChoices" class="monster-choices"></div>
 
           <label for="club">Club</label>
           <select id="club">
@@ -97,7 +220,7 @@
             <div class="id-info">
               <h3 id="idName">Unnamed Student</h3>
 
-              <p id="idMonster">DeadHeart</p>
+              <p id="idMonster">Unrolled</p>
 
               <p>
                 <b>Faction:</b>
@@ -124,6 +247,11 @@
                 <span id="idColorName">Default</span>
               </p>
 
+              <p>
+                <b>Popularity:</b>
+                <span id="idPopularityScore">0</span>
+              </p>
+
               <p class="quote" id="idQuote">
                 “I haven’t been placed yet.”
               </p>
@@ -138,7 +266,7 @@
       <h2>Faction Quiz</h2>
 
       <p class="section-copy">
-        One try. The academy does not believe in retakes.
+        One placement. No retakes unless you reset the prototype.
       </p>
 
       <div id="quizLocked" class="locked hidden"></div>
@@ -162,7 +290,7 @@
             <small>rolls left</small>
           </div>
 
-          <button class="big-draw" onclick="rollItem()">
+          <button id="rollButton" class="big-draw" onclick="rollItem()">
             Roll Academy Item
           </button>
 
@@ -190,12 +318,12 @@
       <h2>Customize ID</h2>
 
       <p class="section-copy">
-        Pick one curse, one pet, and one ID color. Selected items glow and get a checkmark.
+        Equip one curse, one pet, and one ID color.
       </p>
 
       <div class="customize-actions">
         <button class="primary" onclick="applyCustomization()">
-          Apply Selected Items to ID
+          Apply to ID
         </button>
 
         <button onclick="clearEquipped()">
@@ -203,14 +331,25 @@
         </button>
       </div>
 
-      <h3>Curses</h3>
-      <div id="customCurses" class="item-grid"></div>
+      <div class="category-tabs">
+        <button class="tab-button active" onclick="showCustomizeCategory('curse')">
+          Curses
+        </button>
 
-      <h3>Pets</h3>
-      <div id="customPets" class="item-grid"></div>
+        <button class="tab-button" onclick="showCustomizeCategory('pet')">
+          Pets
+        </button>
 
-      <h3>ID Colors</h3>
-      <div id="customColors" class="item-grid"></div>
+        <button class="tab-button" onclick="showCustomizeCategory('color')">
+          ID Colors
+        </button>
+      </div>
+
+      <div id="customizeCurrentTitle" class="category-title">
+        Curses
+      </div>
+
+      <div id="customizeGrid" class="item-grid compact"></div>
     </section>
 
     <!-- COLLECTION PAGE -->
@@ -218,8 +357,7 @@
       <h2>Collection</h2>
 
       <p class="section-copy">
-        Everything you own. Later this can become a public profile, leaderboard,
-        global chat, and trading system.
+        Everything you own. Later this becomes public profiles, trading, and rarity flexing.
       </p>
 
       <div class="collection-stats">
@@ -239,20 +377,85 @@
         </div>
       </div>
 
-      <h3>Curses</h3>
-      <div id="collectionCurses" class="gallery"></div>
+      <div class="category-tabs">
+        <button class="collection-tab-button active" onclick="showCollectionCategory('curse')">
+          Curses
+        </button>
 
-      <h3>Pets</h3>
-      <div id="collectionPets" class="gallery"></div>
+        <button class="collection-tab-button" onclick="showCollectionCategory('pet')">
+          Pets
+        </button>
 
-      <h3>ID Colors</h3>
-      <div id="collectionColors" class="gallery"></div>
+        <button class="collection-tab-button" onclick="showCollectionCategory('color')">
+          ID Colors
+        </button>
+      </div>
+
+      <div id="collectionCurrentTitle" class="category-title">
+        Curses
+      </div>
+
+      <div id="collectionGrid" class="gallery compact"></div>
+    </section>
+
+    <!-- RANKINGS PAGE -->
+    <section id="rankingSection" class="panel">
+      <h2>Popularity Rankings</h2>
+
+      <p class="section-copy">
+        Prototype rankings are local/fake for now. Later this will be server-side with Firebase.
+      </p>
+
+      <div class="ranking-board">
+        <div class="ranking-row">
+          <span>#1</span>
+          <b>RottenMoxie</b>
+          <em>980 popularity</em>
+        </div>
+
+        <div class="ranking-row">
+          <span>#2</span>
+          <b>StaticSaint</b>
+          <em>860 popularity</em>
+        </div>
+
+        <div class="ranking-row">
+          <span>#3</span>
+          <b>DollhouseHex</b>
+          <em>720 popularity</em>
+        </div>
+
+        <div class="ranking-row player-rank">
+          <span>#?</span>
+          <b id="rankingName">You</b>
+          <em><span id="rankingScore">0</span> popularity</em>
+        </div>
+      </div>
+
+      <div class="event-board">
+        <h3>Server Features Later</h3>
+
+        <div class="event-item">
+          <b>Firebase Auth:</b>
+          saves accounts and public profiles.
+        </div>
+
+        <div class="event-item">
+          <b>Firestore Rankings:</b>
+          compares popularity score globally.
+        </div>
+
+        <div class="event-item">
+          <b>Global Chat:</b>
+          academy lobby chat with usernames and profile links.
+        </div>
+      </div>
     </section>
   </main>
 
   <footer>
     <p>
-      GloomPop Academy prototype v3 — localStorage now, Firebase later.
+      GloomPop Academy prototype v4 — academy hub, mini ID, rolls, collections, and rankings.
     </p>
   </footer>
 
